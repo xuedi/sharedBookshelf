@@ -1,2 +1,2 @@
 # sharedBookshelf
-A PHP website that helps you keep track of who did lend your books
+A PHP website that helps you keep track of who you did lend your books to
