@@ -1,3 +1,3 @@
 <?php
 
-// later on add stuff
+require __DIR__ . '/../vendor/autoload.php';
