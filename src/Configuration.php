@@ -34,6 +34,7 @@ class Configuration
     {
         $path = $this->basePath . 'data/';
         if (isset($data['dataPath'])) {
+            var_dump($data['dataPath']);
             $path = (string)$data['dataPath'];
             if (substr($path, 0, 1) != '/') {
                 $path = $this->basePath . $path; // relative
