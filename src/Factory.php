@@ -9,11 +9,12 @@ use Slim\Factory\AppFactory;
 class Factory
 {
     protected ?App $slim = null;
+    protected ?File $configFile = null;
     private Configuration $config;
 
     public function __construct()
     {
-        $this->config = $this->createConfiguration();
+        $this->configFile ??= new File(__DIR__ . '/../config.ini');
         $this->slim ??= AppFactory::create();
 
         $this->setRouting();
@@ -42,6 +43,6 @@ class Factory
 
     private function createConfiguration(): Configuration
     {
-        return new Configuration();
+        return new Configuration($this->configFile);
     }
 }

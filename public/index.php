@@ -7,8 +7,11 @@ if (substr($_SERVER["REQUEST_URI"], 0, 8) == '/assets/') {
 }
 
 use SharedBookshelf\Factory;
+use SharedBookshelf\File;
 
 require __DIR__ . '/../vendor/autoload.php';
 
-$factory = new Factory();
+$config = new File(__DIR__ . '/../config.ini');
+
+$factory = new Factory($config);
 $factory->run();

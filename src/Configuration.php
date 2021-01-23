@@ -9,10 +9,10 @@ class Configuration
     private string $basePath;
     private string $dataPath;
 
-    public function __construct()
+    public function __construct(File $config)
     {
         $this->basePath = realpath(__DIR__ . '/../') . '/';
-        $data = parse_ini_file($this->basePath . 'config.ini');
+        $data = parse_ini_file($config->asString());
 
         $this->setDataPath($data['dataPath'] ?? __DIR__ . '/../data');
     }

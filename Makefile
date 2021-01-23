@@ -24,6 +24,7 @@ test: ## Run all tests
 
 test_unit: ## run unit tests
 	./tools/phpunit.phar -c tests/phpunit.xml
+	php tests/badge_generator.php
 
 test_psalm: ## run psalm static analysis
 	./tools/psalm.phar --config='tests/psalm.xml' --show-info=false
