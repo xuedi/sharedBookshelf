@@ -39,6 +39,7 @@ class Configuration
                 $path = $this->basePath . $path; // relative
             }
         }
+        var_dump($path);
         return (string)realpath($path) . "/";
     }
 }
