@@ -2,7 +2,7 @@
 
 namespace SharedBookshelf;
 
-use SharedBookshelf\Exceptions\ConfigException;
+use RuntimeException;
 
 class Configuration
 {
@@ -11,10 +11,10 @@ class Configuration
 
     public function __construct(File $config)
     {
-        $this->basePath = realpath(__DIR__ . '/../') . '/';
-        $data = parse_ini_file($config->asString());
+        $data = (array)parse_ini_file($config->asString());
 
-        $this->setDataPath($data['dataPath'] ?? __DIR__ . '/../data');
+        $this->basePath = $this->createBasePath();
+        $this->dataPath = $this->createDataPath($data);
     }
 
     public function getBasePath(): string
@@ -27,25 +27,20 @@ class Configuration
         return $this->dataPath;
     }
 
-    private function setDataPath(string $path)
+    private function createBasePath(): string
     {
-        $path = rtrim(realpath($path) . '/', '/');
-        $this->dataPath = $path;
-        $this->ensurePathExists($path);
-        $this->ensurePathIsWritable($path);
+        return realpath(__DIR__ . '/../') . '/';
     }
 
-    private function ensurePathExists(string $path): void
+    private function createDataPath(array $data): string
     {
-        if(!is_dir($path)) {
-            throw new ConfigException("The Path '$path' does not exist.");
+        $path = $this->basePath . 'data/';
+        if (isset($data['dataPath'])) {
+            $path = (string)$data['dataPath'];
+            if (substr($path, 0, 1) != '/') {
+                $path = $this->basePath . $path; // relative
+            }
         }
-    }
-
-    private function ensurePathIsWritable(string $path): void
-    {
-        if(!is_writable($path)) {
-            throw new ConfigException("The Path '$path' needs write permissions.");
-        }
+        return (string)realpath($path) . "/";
     }
 }

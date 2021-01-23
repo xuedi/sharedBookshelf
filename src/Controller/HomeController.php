@@ -12,10 +12,9 @@ class HomeController
         //
     }
 
-    public function index(Request $request, Response $response, array $args = []) {
-
-
-        $response->getBody()->write('Hello world');
+    public function index(Request $request, Response $response, array $args = []): Response
+    {
+        $response->getBody()->write('HomeController::index');
 
         return $response;
     }

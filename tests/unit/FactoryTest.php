@@ -16,16 +16,19 @@ final class FactoryTest extends TestCase
     /** @var MockObject|App */
     private $appMock;
 
-    /** @var MockObject|File */
-    private $configFileMock;
+    /** @var MockObject|Configuration */
+    private $configMock;
 
     private Factory $subject;
 
     public function setUp(): void
     {
-        $this->configFileMock = $this->createMock(File::class);
+        $this->configMock = $this->createMock(Configuration::class);
         $this->appMock = $this->createMock(App::class);
-        $this->subject = new FactoryStub($this->configFileMock, $this->appMock);
+        $this->subject = new Factory(
+            $this->appMock,
+            $this->configMock
+        );
     }
 
     public function testCanRun(): void

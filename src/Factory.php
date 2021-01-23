@@ -4,30 +4,28 @@ namespace SharedBookshelf;
 
 use SharedBookshelf\Controller\HomeController;
 use Slim\App;
-use Slim\Factory\AppFactory;
 
 class Factory
 {
-    protected ?App $slim = null;
-    protected ?File $configFile = null;
+    private App $slim;
     private Configuration $config;
 
-    public function __construct()
+    public function __construct(App $slim, Configuration $config)
     {
-        $this->configFile ??= new File(__DIR__ . '/../config.ini');
-        $this->slim ??= AppFactory::create();
+        $this->slim = $slim;
+        $this->config = $config;
 
         $this->setRouting();
     }
 
-    public function run()
+    public function run(): void
     {
         $this->slim->run();
     }
 
     // ### Routing ###
 
-    private function setRouting()
+    private function setRouting(): void
     {
         $this->slim->get('/', [$this->createHomeController(), 'index']);
     }
@@ -39,10 +37,7 @@ class Factory
         return new HomeController();
     }
 
-    // ### Stuff ###
+    // ### Other stuff ###
 
-    private function createConfiguration(): Configuration
-    {
-        return new Configuration($this->configFile);
-    }
+
 }

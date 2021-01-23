@@ -16,9 +16,8 @@ jobs:
       with:
         php-version: '7.4'
         extensions: xml
-        ini-values: post_max_size=256M, short_open_tag=On
         coverage: xdebug
-        tools: phpunit
+        tools: phpunit, psalm
 
     - name: Install Composer dependencies
       run: |
@@ -27,3 +26,6 @@ jobs:
     - name: Run tests
       run: |
         make test_unit
+
+    - name: Run Psalm
+      run: psalm --output-format=github
