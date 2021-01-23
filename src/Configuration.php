@@ -2,7 +2,7 @@
 
 namespace SharedBookshelf;
 
-use SharedBookshelf\Controller\Exceptions\ConfigException;
+use SharedBookshelf\Exceptions\ConfigException;
 
 class Configuration
 {
