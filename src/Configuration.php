@@ -2,8 +2,6 @@
 
 namespace SharedBookshelf;
 
-use RuntimeException;
-
 class Configuration
 {
     private string $basePath;

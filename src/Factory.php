@@ -36,8 +36,4 @@ class Factory
     {
         return new HomeController();
     }
-
-    // ### Other stuff ###
-
-
 }

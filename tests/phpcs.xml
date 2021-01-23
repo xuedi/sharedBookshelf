@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<ruleset name="Selective Standard">
+
+    <file>../src/</file>
+
+    <config phpcs-only="true" name="zend_ca_path" value="/path/to/ZendCodeAnalyzer"/>
+
+    <exclude-pattern phpcbf-only="true">*/3rdparty/*</exclude-pattern>
+
+    <rule ref="Squiz">
+        <exclude phpcbf-only="true" name="Generic.WhiteSpace.ScopeIndent"/>
+        <exclude phpcbf-only="false" name="PEAR.Commenting.FunctionComment"/>
+    </rule>
+
+    <rule ref="Generic.Commenting.Todo.CommentFound">
+        <severity phpcbf-only="true">0</severity>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property phpcs-only="true" name="lineLimit" value="140"/>
+            <property phpcbf-only="true" name="lineLimit" value="140"/>
+        </properties>
+    </rule>
+
+    <rule ref="Generic.Formatting.SpaceAfterCast">
+        <properties>
+            <property name="spacing" value="0" />
+        </properties>
+    </rule>
+
+    <rule ref="Squiz.Strings.ConcatenationSpacing">
+        <properties>
+            <property name="spacing" value="1" />
+        </properties>
+    </rule>
+
+</ruleset>
