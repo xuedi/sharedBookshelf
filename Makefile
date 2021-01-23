@@ -5,8 +5,6 @@ help: ## Show this help
 
 install: ## Install composer dependencies
 	./tools/composer.phar install
-	#mkdir -p public/debugbar
-	#cp -rf vendor/maximebf/debugbar/src/DebugBar/Resources/* public/debugbar/
 
 update: ## Update composer dependencies
 	./tools/composer.phar update

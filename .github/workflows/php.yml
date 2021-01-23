@@ -1,0 +1,29 @@
+name: PHP-Unit
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '7.4'
+        extensions: xml
+        ini-values: post_max_size=256M, short_open_tag=On
+        coverage: xdebug
+        tools: phpunit
+
+    - name: Install Composer dependencies
+      run: |
+        make install
+
+    - name: Run tests
+      run: |
+        make test_unit
