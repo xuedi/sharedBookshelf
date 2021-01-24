@@ -23,9 +23,12 @@ jobs:
       run: |
         make install
 
-    - name: Run tests
+    - name: Run unit tests
       run: |
         make test_unit
 
     - name: Run Psalm
-      run: psalm --output-format=github
+      run: make test_psalm
+
+    - name: Run sniffer
+      run: make test_sniff
