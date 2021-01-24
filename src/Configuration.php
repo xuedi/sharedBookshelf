@@ -2,6 +2,8 @@
 
 namespace SharedBookshelf;
 
+use SharedBookshelf\Exceptions\FsWrapperException;
+
 class Configuration
 {
     private string $basePath;
@@ -32,13 +34,13 @@ class Configuration
 
     private function createDataPath(array $data): string
     {
-        $path = $this->basePath . 'data/';
         if (isset($data['dataPath'])) {
-            var_dump($data['dataPath']);
             $path = (string)$data['dataPath'];
             if (substr($path, 0, 1) != '/') {
                 $path = $this->basePath . $path; // relative
             }
+        } else {
+            $path = $this->basePath . 'data/';
         }
         return realpath($path) . "/";
     }
