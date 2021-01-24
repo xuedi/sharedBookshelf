@@ -9,6 +9,24 @@ use SharedBookshelf\Exceptions\FsWrapperException;
 
 class FsWrapper
 {
+    public function parse_ini_file(string $iniFile): array
+    {
+        $data = parse_ini_file($iniFile);
+        if ($data === false) {
+            throw new FsWrapperException("Could not parse ini file '$iniFile'");
+        }
+        return $data;
+    }
+
+    public function realpath(string $path): string
+    {
+        $result = realpath($path);
+        if ($result === false) {
+            throw new FsWrapperException("Could not get realpath of path '$path'");
+        }
+        return $result;
+    }
+
     public function filemtime(string $fileName): int
     {
         $result = filemtime($fileName);

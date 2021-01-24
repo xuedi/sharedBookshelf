@@ -8,13 +8,13 @@ class Configuration
 {
     private string $basePath;
     private string $dataPath;
+    private int $debugLevel;
 
-    public function __construct(File $config)
+    public function __construct(FsWrapper $fsWrapper)
     {
-        $data = (array)parse_ini_file($config->asString());
-
-        $this->basePath = $this->createBasePath();
-        $this->dataPath = $this->createDataPath($data);
+        $this->basePath = $fsWrapper->realpath(__DIR__ . '/../') . '/';
+        $this->dataPath = $this->basePath . 'data/';
+        $this->debugLevel = 2;
     }
 
     public function getBasePath(): string
@@ -27,21 +27,8 @@ class Configuration
         return $this->dataPath;
     }
 
-    private function createBasePath(): string
+    public function getDebugLevel(): int
     {
-        return realpath(__DIR__ . '/../') . '/';
-    }
-
-    private function createDataPath(array $data): string
-    {
-        if (isset($data['dataPath'])) {
-            $path = (string)$data['dataPath'];
-            if (substr($path, 0, 1) != '/') {
-                $path = $this->basePath . $path; // relative
-            }
-        } else {
-            $path = $this->basePath . 'data/';
-        }
-        return realpath($path) . "/";
+        return $this->debugLevel;
     }
 }

@@ -2,46 +2,40 @@
 
 namespace SharedBookshelf;
 
+use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
  * @covers \SharedBookshelf\Configuration
- * @uses   \SharedBookshelf\File
+ * @uses   \SharedBookshelf\FsWrapper
  */
 final class ConfigurationTest extends TestCase
 {
-    private Configuration $configNormal;
-    private Configuration $configDefault;
-    private Configuration $configAbsolut;
+    private Configuration $subject;
 
     public function setUp(): void
     {
-        $this->configNormal = new Configuration(new File(__DIR__ . '/fixtures/config.ini'));
-        $this->configDefault = new Configuration(new File(__DIR__ . '/fixtures/configEmpty.ini'));
-        $this->configAbsolut = new Configuration(new File(__DIR__ . '/fixtures/configAbsolute.ini'));
+        $fsWrapperMock = $this->createMock(FsWrapper::class);
+        $fsWrapperMock->expects($this->once())->method('realpath')->willReturn('/testPath');
+
+        $this->subject = new Configuration($fsWrapperMock);
     }
 
     public function testGetBasePath(): void
     {
-        $expected = realpath(__DIR__ . '/../../') . '/';
-        $this->assertEquals($expected, $this->configNormal->getBasePath());
+        $expected = '/testPath/';
+        $this->assertEquals($expected, $this->subject->getBasePath());
     }
 
     public function testGetDataPath(): void
     {
-        $expected = realpath(__DIR__ . '/../../') . '/data/';
-        $this->assertEquals($expected, $this->configNormal->getDataPath());
+        $expected = '/testPath/data/';
+        $this->assertEquals($expected, $this->subject->getDataPath());
     }
 
-    public function testCanWithDefaults(): void
+    public function testCanDebugLevel(): void
     {
-        $expected = realpath(__DIR__ . '/../../') . '/data/';
-        $this->assertEquals($expected, $this->configDefault->getDataPath());
-    }
-
-    public function testCanDealWithAbsolutePaths(): void
-    {
-        $expected = '/tmp/';
-        $this->assertEquals($expected, $this->configAbsolut->getDataPath());
+        $expected = 2;
+        $this->assertEquals($expected, $this->subject->getDebugLevel());
     }
 }
