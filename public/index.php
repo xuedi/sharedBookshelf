@@ -13,8 +13,7 @@ if (substr($_SERVER["REQUEST_URI"], 0, 8) == '/assets/') {
 }
 
 $slim = AppFactory::create();
-$configFile = new File(__DIR__ . '/../config.ini');
-$config = new Configuration($configFile);
+$config = new Configuration(new FsWrapper());
 
 $factory = new Factory($slim, $config);
 $factory->run();

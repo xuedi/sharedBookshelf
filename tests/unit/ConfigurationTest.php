@@ -2,7 +2,6 @@
 
 namespace SharedBookshelf;
 
-use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -31,6 +30,18 @@ final class ConfigurationTest extends TestCase
     {
         $expected = '/testPath/data/';
         $this->assertEquals($expected, $this->subject->getDataPath());
+    }
+
+    public function testGetTemplatePath(): void
+    {
+        $expected = '/testPath/templates/';
+        $this->assertEquals($expected, $this->subject->getTemplatePath());
+    }
+
+    public function testGetCachePath(): void
+    {
+        $expected = '/testPath/cache/';
+        $this->assertEquals($expected, $this->subject->getCachePath());
     }
 
     public function testCanDebugLevel(): void

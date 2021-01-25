@@ -1,6 +1,9 @@
 .idea/
 reports/
 vendor/
+
 tests/.phpunit.result.cache
+
+.cache/
 
 composer.lock

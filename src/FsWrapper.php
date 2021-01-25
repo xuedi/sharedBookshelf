@@ -2,11 +2,12 @@
 
 namespace SharedBookshelf;
 
-// @codingStandardsIgnoreFile
-// @codeCoverageIgnoreStart
-
 use SharedBookshelf\Exceptions\FsWrapperException;
 
+/**
+ * @codingStandardsIgnoreFile
+ * @codeCoverageIgnoreStart
+ */
 class FsWrapper
 {
     public function parse_ini_file(string $iniFile): array

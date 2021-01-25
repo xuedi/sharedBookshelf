@@ -37,4 +37,13 @@ final class FactoryTest extends TestCase
 
         $this->subject->run();
     }
+
+    public function testCanRunWithDebug(): void
+    {
+        $this->appMock
+            ->expects($this->once())
+            ->method('run');
+
+        $this->subject->run();
+    }
 }

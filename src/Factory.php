@@ -4,6 +4,8 @@ namespace SharedBookshelf;
 
 use SharedBookshelf\Controller\HomeController;
 use Slim\App;
+use Twig\Environment as Twig;
+use Twig\Loader\FilesystemLoader as TwigTemplates;
 
 class Factory
 {
@@ -34,6 +36,25 @@ class Factory
 
     private function createHomeController(): HomeController
     {
-        return new HomeController();
+        return new HomeController($this->createTwig(), $this->config);
+    }
+
+    // ### Other stuff ###
+
+    private function createTwig(): Twig
+    {
+        $cache = $this->config->getCachePath();
+        if ($this->config->getDebugLevel()) {
+            $cache = false;
+        }
+
+        return new Twig($this->createTwigTemplates(), [
+            'cache' => $cache
+        ]);
+    }
+
+    private function createTwigTemplates(): TwigTemplates
+    {
+        return new TwigTemplates($this->config->getTemplatePath());
     }
 }
