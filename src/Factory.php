@@ -10,12 +10,14 @@ use Twig\Loader\FilesystemLoader as TwigTemplates;
 class Factory
 {
     private App $slim;
+    private Twig $twig;
     private Configuration $config;
 
     public function __construct(App $slim, Configuration $config)
     {
         $this->slim = $slim;
         $this->config = $config;
+        $this->twig = $this->createTwig();
 
         $this->setRouting();
     }
@@ -36,7 +38,7 @@ class Factory
 
     private function createHomeController(): HomeController
     {
-        return new HomeController($this->createTwig(), $this->config);
+        return new HomeController($this->twig, $this->config);
     }
 
     // ### Other stuff ###

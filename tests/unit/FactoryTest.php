@@ -40,10 +40,10 @@ final class FactoryTest extends TestCase
 
     public function testCanRunWithDebug(): void
     {
-        $this->appMock
-            ->expects($this->once())
-            ->method('run');
+        $this->configMock->expects($this->once())->method('getDebugLevel')->willReturn(2);
+        $this->appMock->expects($this->once())->method('run');
 
-        $this->subject->run();
+        $subject = new Factory($this->appMock,$this->configMock); // happens on build
+        $subject->run();
     }
 }
