@@ -4,46 +4,44 @@ namespace SharedBookshelf;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use Slim\App;
+use SimpleLog\Logger as SimpleLogger;
+use Twig\Environment as Twig;
 
 /**
  * @covers \SharedBookshelf\Factory
  * @uses   \SharedBookshelf\Configuration
  * @uses   \SharedBookshelf\Controller\HomeController
+ * @uses   \SharedBookshelf\Controller\Settings\Collection
+ * @uses   \SharedBookshelf\Controller\Settings\HttpType
+ * @uses   \SharedBookshelf\Controller\Settings\Method
+ * @uses   \SharedBookshelf\Controller\Settings\Path
+ * @uses   \SharedBookshelf\Controller\Settings\Setting
+ * @uses   \SharedBookshelf\Environment
  */
 final class FactoryTest extends TestCase
 {
-    /** @var MockObject|App */
-    private $appMock;
-
-    /** @var MockObject|Configuration */
-    private $configMock;
-
+    private MockObject|Configuration $configMock;
+    private MockObject|SimpleLogger $loggerMock;
+    private MockObject|Twig $twigMock;
     private Factory $subject;
 
     public function setUp(): void
     {
         $this->configMock = $this->createMock(Configuration::class);
-        $this->appMock = $this->createMock(App::class);
-        $this->subject = new Factory(
-            $this->appMock,
-            $this->configMock
+        $this->loggerMock = $this->createMock(SimpleLogger::class);
+        $this->twigMock = $this->createMock(Twig::class);
+
+        $this->configMock->expects($this->once())->method('getEnvironment')->willReturn(new Environment('unit_test'));
+
+        $this->subject = new FactoryStub(
+            $this->configMock,
+            $this->loggerMock,
+            $this->twigMock
         );
     }
 
     public function testCanRun(): void
     {
-        $this->appMock->expects($this->once())->method('run');
-
         $this->subject->run();
-    }
-
-    public function testCanRunWithDebug(): void
-    {
-        $this->configMock->expects($this->once())->method('getDebugLevel')->willReturn(2);
-        $this->appMock->expects($this->once())->method('run');
-
-        $subject = new Factory($this->appMock,$this->configMock); // happens on build
-        $subject->run();
     }
 }

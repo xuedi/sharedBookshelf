@@ -13,7 +13,7 @@ use Twig\Environment as Twig;
  * @codingStandardsIgnoreFile
  * @codeCoverageIgnoreStart
  */
-class HomeController implements Controller
+class LoginController implements Controller
 {
     private Twig $twig;
     private Configuration $config;
@@ -27,13 +27,13 @@ class HomeController implements Controller
     public function getSettings(): ControllerSettings
     {
         return new ControllerSettings([
-            new Setting('/', 'index', 'get'),
+            new Setting('/login', 'index', 'get'),
         ]);
     }
 
     public function index(Request $request, Response $response, array $args = []): Response
     {
-        $template = $this->twig->load('home.twig');
+        $template = $this->twig->load('login.twig');
         $data = [
             'debug' => $this->config->getDebugLevel(),
             'go' => 'here'

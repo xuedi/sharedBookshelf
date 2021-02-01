@@ -13,7 +13,7 @@ use Twig\Environment as Twig;
  * @codingStandardsIgnoreFile
  * @codeCoverageIgnoreStart
  */
-class HomeController implements Controller
+class SignupController implements Controller
 {
     private Twig $twig;
     private Configuration $config;
@@ -27,13 +27,14 @@ class HomeController implements Controller
     public function getSettings(): ControllerSettings
     {
         return new ControllerSettings([
-            new Setting('/', 'index', 'get'),
+            new Setting('/signup', 'index', 'get'),
+            new Setting('/signup/save', 'save', 'post'),
         ]);
     }
 
     public function index(Request $request, Response $response, array $args = []): Response
     {
-        $template = $this->twig->load('home.twig');
+        $template = $this->twig->load('signup.twig');
         $data = [
             'debug' => $this->config->getDebugLevel(),
             'go' => 'here'
@@ -41,6 +42,15 @@ class HomeController implements Controller
 
         $response->getBody()->write(
             $template->render($data)
+        );
+
+        return $response;
+    }
+
+    public function save(Request $request, Response $response, array $args = []): Response
+    {
+        $response->getBody()->write(
+            "SAVE"
         );
 
         return $response;

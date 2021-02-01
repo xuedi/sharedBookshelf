@@ -1,5 +1,44 @@
-{% extends 'base.twig' %}
+{% extends 'layout/base.twig' %}
 
 {% block content %}
-    Home Content Block
+    <div class="content">
+        <h2>Welcome to the SharedBookshelf</h2>
+        <p>
+            The shared bookshelf is a php application to have your bookshelf shared with friends or coworkers, people can handover the book by themself and the app is monitoring where the books are at the current time.
+        </p>
+
+        <h2>Features</h2>
+        <div class="columns is-centered">
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        Easy book handover protocol
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        community trust level based on interactions
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        virtual library with bookmanagement, search and current locations
+                    </div>
+                </div>
+            </div>
+            <div class="column">
+                <div class="card">
+                    <div class="card-content">
+                        scheduling view and book requests management
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
 {% endblock %}

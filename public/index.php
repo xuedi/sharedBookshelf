@@ -12,8 +12,8 @@ if (substr($_SERVER["REQUEST_URI"], 0, 8) == '/assets/') {
     return false;
 }
 
-$slim = AppFactory::create();
 $config = new Configuration(new FsWrapper());
 
-$factory = new Factory($slim, $config);
+$factory = new Factory($config);
 $factory->run();
+

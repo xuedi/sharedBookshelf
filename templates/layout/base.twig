@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SharedBookshelf</title>
+    <link rel="stylesheet" href="/assets/bulma.css">
+    <script defer src="/assets/bulma.js"></script>
+    <link rel="stylesheet/less" type="text/css" href="/assets/styles.less" />
+    <script src="//cdn.jsdelivr.net/npm/less@3.13" ></script>
+</head>
+<body>
+{% include 'layout/top.twig' %}
+
+    <div class="container">
+    {% block content %}{% endblock %}
+    </div>
+
+    <div id="debug">
+        DebugLevel: {{ debug }}
+        {% include 'layout/debug.twig' %}
+    </div>
+
+    {% include 'layout/footer.twig' %}
+</body>
+</html>

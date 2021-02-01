@@ -10,11 +10,12 @@
     }
   },
   "require": {
-    "php": "7.4.*",
+    "php": "8.*",
     "slim/slim": "4.*",
     "nyholm/psr7": "1.*",
     "nyholm/psr7-server": "1.*",
-    "twig/twig": "3.*"
+    "twig/twig": "3.*",
+    "markrogoyski/simplelog-php": "0.4.*"
   },
   "require-dev": {
     "ext-simplexml": "*"

@@ -9,6 +9,7 @@ class Configuration
     private int $debugLevel;
     private string $templates;
     private string $cache;
+    private string $errorLog;
 
     public function __construct(FsWrapper $fsWrapper)
     {
@@ -16,6 +17,7 @@ class Configuration
         $this->dataPath = $this->basePath . 'data/';
         $this->templates = $this->basePath . 'templates/';
         $this->cache = $this->basePath . 'cache/';
+        $this->errorLog = $this->basePath . 'logs/error.log';
         $this->debugLevel = 2;
     }
 
@@ -37,6 +39,16 @@ class Configuration
     public function getTemplatePath(): string
     {
         return $this->templates;
+    }
+
+    public function getErrorLog(): string
+    {
+        return $this->errorLog;
+    }
+
+    public function getEnvironment(): Environment
+    {
+        return new Environment('unit_test');
     }
 
     public function getCachePath(): string
