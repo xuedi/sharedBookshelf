@@ -20,28 +20,36 @@ use Twig\Environment as Twig;
  */
 final class FactoryTest extends TestCase
 {
-    private MockObject|Configuration $configMock;
-    private MockObject|SimpleLogger $loggerMock;
+    private MockObject|File $configFileMock;
+    private MockObject|Configuration $configurationMock;
+    private MockObject|Framework $frameworkMock;
     private MockObject|Twig $twigMock;
     private Factory $subject;
 
     public function setUp(): void
     {
-        $this->configMock = $this->createMock(Configuration::class);
-        $this->loggerMock = $this->createMock(SimpleLogger::class);
+        $this->configFileMock = $this->createMock(File::class);
+        $this->configurationMock = $this->createMock(Configuration::class);
+        $this->frameworkMock = $this->createMock(Framework::class);
         $this->twigMock = $this->createMock(Twig::class);
 
-        $this->configMock->expects($this->once())->method('getEnvironment')->willReturn(new Environment('unit_test'));
-
         $this->subject = new FactoryStub(
-            $this->configMock,
-            $this->loggerMock,
-            $this->twigMock
+            $this->configFileMock,
+            $this->configurationMock,
+            $this->twigMock,
+            $this->frameworkMock
         );
+    }
+
+    public function testCanSetUp(): void
+    {
+        $this->frameworkMock->expects($this->atLeast(6))->method('registerController');
+        $this->subject->setup();
     }
 
     public function testCanRun(): void
     {
+        $this->frameworkMock->expects($this->once())->method('run');
         $this->subject->run();
     }
 }

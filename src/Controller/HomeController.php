@@ -9,10 +9,6 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use Twig\Environment as Twig;
 
-/**
- * @codingStandardsIgnoreFile
- * @codeCoverageIgnoreStart
- */
 class HomeController implements Controller
 {
     private Twig $twig;
@@ -33,14 +29,8 @@ class HomeController implements Controller
 
     public function index(Request $request, Response $response, array $args = []): Response
     {
-        $template = $this->twig->load('home.twig');
-        $data = [
-            'debug' => $this->config->getDebugLevel(),
-            'go' => 'here'
-        ];
-
         $response->getBody()->write(
-            $template->render($data)
+            $this->twig->load('home.twig')->render([])
         );
 
         return $response;

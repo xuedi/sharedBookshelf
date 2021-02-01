@@ -12,8 +12,7 @@ if (substr($_SERVER["REQUEST_URI"], 0, 8) == '/assets/' || $_SERVER["REQUEST_URI
 
 session_start();
 
-$config = new Configuration(new FsWrapper());
-
-$factory = new Factory($config);
+$factory = new Factory(new File(__DIR__ . '/../config.ini'));
+$factory->setup();
 $factory->run();
 

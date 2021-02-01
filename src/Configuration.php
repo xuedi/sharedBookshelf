@@ -11,8 +11,9 @@ class Configuration
     private string $cache;
     private string $errorLog;
 
-    public function __construct(FsWrapper $fsWrapper)
+    public function __construct(FsWrapper $fsWrapper, File $configFile)
     {
+        // open $configFile
         $this->basePath = $fsWrapper->realpath(__DIR__ . '/../') . '/';
         $this->dataPath = $this->basePath . 'data/';
         $this->templates = $this->basePath . 'templates/';

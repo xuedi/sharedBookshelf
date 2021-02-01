@@ -2,29 +2,15 @@
 
 namespace SharedBookshelf;
 
-use Psr\Log\LoggerInterface;
-use SimpleLog\Logger as SimpleLogger;
 use Twig\Environment as Twig;
 
 class FactoryStub extends Factory
 {
-    private SimpleLogger $logger;
-    private Twig $twig;
-
-    public function __construct(Configuration $config, SimpleLogger $logger, Twig $twig)
+    public function __construct(File $configFile, Configuration $configuration, Twig $twig, Framework $framework)
     {
-        $this->logger = $logger;
         $this->twig = $twig;
-        parent::__construct($config);
-    }
-
-    protected function createLogger(): LoggerInterface
-    {
-        return $this->logger;
-    }
-
-    protected function createTwig(): Twig
-    {
-        return $this->twig;
+        $this->framework = $framework;
+        $this->configuration = $configuration;
+        parent::__construct($configFile);
     }
 }

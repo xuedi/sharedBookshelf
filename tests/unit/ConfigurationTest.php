@@ -15,10 +15,12 @@ final class ConfigurationTest extends TestCase
 
     public function setUp(): void
     {
+        $configFileMock = $this->createMock(File::class);
+
         $fsWrapperMock = $this->createMock(FsWrapper::class);
         $fsWrapperMock->expects($this->once())->method('realpath')->willReturn('/testPath');
 
-        $this->subject = new Configuration($fsWrapperMock);
+        $this->subject = new Configuration($fsWrapperMock, $configFileMock);
     }
 
     public function testGetBasePath(): void
