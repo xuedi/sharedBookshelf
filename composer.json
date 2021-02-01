@@ -15,7 +15,9 @@
     "nyholm/psr7": "1.*",
     "nyholm/psr7-server": "1.*",
     "twig/twig": "3.*",
-    "markrogoyski/simplelog-php": "0.4.*"
+    "markrogoyski/simplelog-php": "0.4.*",
+    "gregwar/captcha": "1.*",
+    "awurth/slim-validation": "^2.1"
   },
   "require-dev": {
     "ext-simplexml": "*"

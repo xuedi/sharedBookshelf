@@ -3,5 +3,19 @@
 {% block content %}
     <div class="content">
         <h2>Sign up</h2>
+
+        <p>
+            After sign up there are more settings in the profile
+        </p>
+
+        <div class="columns">
+            <div class="column">
+                {% include 'signup_form.twig' %}
+            </div>
+            <div class="column">
+                -
+            </div>
+        </div>
+
     </div>
 {% endblock %}

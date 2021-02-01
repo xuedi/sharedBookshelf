@@ -2,12 +2,18 @@
 
 namespace SharedBookshelf;
 
+use Awurth\SlimValidation\Validator as FormValidator;
+use Awurth\SlimValidation\ValidatorExtension;
+use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Log\LoggerInterface;
 use SharedBookshelf\Controller\Errors\Error404Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
 use SharedBookshelf\Controller\HomeController;
+use SharedBookshelf\Controller\ImagesController;
 use SharedBookshelf\Controller\LoginController;
+use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
+use SharedBookshelf\Controller\TermsController;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;
@@ -29,6 +35,9 @@ class Factory
         $this->framework->registerController($this->createHomeController());
         $this->framework->registerController($this->createLoginController());
         $this->framework->registerController($this->createSignupController());
+        $this->framework->registerController($this->createImagesController());
+        $this->framework->registerController($this->createTermsController());
+        $this->framework->registerController($this->createPrivacyController());
         $this->framework->registerErrorController($this->createError404Controller());
     }
 
@@ -51,7 +60,27 @@ class Factory
 
     private function createSignupController(): SignupController
     {
-        return new SignupController($this->twig, $this->config);
+        return new SignupController(
+            $this->twig,
+            $this->config,
+            $this->createCaptchaBuilder(),
+            $this->createFormValidator()
+        );
+    }
+
+    private function createImagesController(): ImagesController
+    {
+        return new ImagesController($this->twig, $this->config);
+    }
+
+    private function createTermsController(): TermsController
+    {
+        return new TermsController($this->twig, $this->config);
+    }
+
+    private function createPrivacyController(): PrivacyController
+    {
+        return new PrivacyController($this->twig, $this->config);
     }
 
     private function createError404Controller(): ErrorsController
@@ -100,5 +129,15 @@ class Factory
     private function createSlim(): Slim
     {
         return AppFactory::create();
+    }
+
+    private function createCaptchaBuilder(): CaptchaBuilder
+    {
+        return new CaptchaBuilder();
+    }
+
+    private function createFormValidator(): FormValidator
+    {
+        return new FormValidator();
     }
 }

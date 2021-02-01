@@ -2,8 +2,11 @@
 
 namespace SharedBookshelf\Controller;
 
+use Awurth\SlimValidation\Validator as FormValidator;
+use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use Respect\Validation\Validator as V;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
@@ -17,11 +20,18 @@ class SignupController implements Controller
 {
     private Twig $twig;
     private Configuration $config;
+    private CaptchaBuilder $captcha;
+    /**
+     * @var FormValidator
+     */
+    private FormValidator $formValidator;
 
-    public function __construct(Twig $twig, Configuration $config)
+    public function __construct(Twig $twig, Configuration $config, CaptchaBuilder $captcha, FormValidator $formValidator)
     {
         $this->twig = $twig;
         $this->config = $config;
+        $this->captcha = $captcha;
+        $this->formValidator = $formValidator;
     }
 
     public function getSettings(): ControllerSettings
@@ -37,7 +47,7 @@ class SignupController implements Controller
         $template = $this->twig->load('signup.twig');
         $data = [
             'debug' => $this->config->getDebugLevel(),
-            'go' => 'here'
+            'captchaImage' => $this->getCaptchaImage(),
         ];
 
         $response->getBody()->write(
@@ -49,10 +59,52 @@ class SignupController implements Controller
 
     public function save(Request $request, Response $response, array $args = []): Response
     {
+        $formErrors = [];
+        $formData = $request->getParsedBody();
+
+        // set filter rules
+        $this->formValidator->validate($request, [
+            'username' => V::length(4, 32)->alnum('_')->noWhitespace(),
+            'password' => V::length(4, 32)->alnum('_'),
+            'email' => V::notBlank()->email(),
+        ]);
+
+        // check form validation and captcha code
+        $formErrors = $this->formValidator->getErrors();
+        $captchaSession = (string)($_SESSION['captchaCode'] ?? '');
+        $captchaForm = strtolower((string)($formData['captchaCode'] ?? 'RandomNotMatching'));
+        if ($captchaForm != $captchaSession) {
+            $formErrors['captchaCode'] = 'The capcha does not match';
+        }
+
+        // success, no errors found
+        if (empty($formErrors)) {
+            return $response->withStatus(302)->withHeader('Location', '/profil');
+        }
+
+        $template = $this->twig->load('signup.twig');
+        $data = [
+            'debug' => $this->config->getDebugLevel(),
+            'errors' => $formErrors,
+            'captchaImage' => $this->getCaptchaImage(),
+            'username' => $formData['username'] ?? '',
+            'password' => $formData['password'] ?? '',
+            'email' => $formData['email'] ?? '',
+        ];
+
         $response->getBody()->write(
-            "SAVE"
+            $template->render($data)
         );
 
         return $response;
+    }
+
+    private function getCaptchaImage(): string
+    {
+        $this->captcha->setBackgroundColor(220, 220, 220);
+        $this->captcha->build(100, 36);
+        $_SESSION['captchaCode'] = strtolower($this->captcha->getPhrase());
+
+        return $this->captcha->inline();
     }
 }

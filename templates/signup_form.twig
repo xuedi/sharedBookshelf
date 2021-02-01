@@ -1,0 +1,112 @@
+<form action="/signup/save" method="post" class="box">
+
+    <div class="field">
+        <label class="label">Username</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input {% if errors.username %}is-danger{% endif %}"
+                   type="text"
+                   name="username"
+                   placeholder="Username"
+                   value="{{ username }}">
+            <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+            </span>
+            {% if errors.username %}
+                <p class="help is-danger">
+                <ul>
+                    {% for errors in errors.username %}
+                        <li>{{ errors }}</li>
+                    {% endfor %}
+                </ul>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Email</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input {% if errors.email %}is-danger{% endif %}"
+                   type="email"
+                   name="email"
+                   placeholder="Email address"
+                   value="{{ email }}">
+            <span class="icon is-small is-left">
+                <i class="fas fa-envelope"></i>
+            </span>
+            {% if errors.email %}
+                <p class="help is-danger">
+                <ul>
+                    {% for errors in errors.email %}
+                        <li>{{ errors }}</li>
+                    {% endfor %}
+                </ul>
+                </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input {% if errors.password %}is-danger{% endif %}"
+                   type="password"
+                   name="password"
+                   placeholder="Password"
+                   value="{{ password }}">
+        </div>
+        {% if errors.password %}
+            <p class="help is-danger">
+            <ul>
+                {% for errors in errors.password %}
+                    <li>{{ errors }}</li>
+                {% endfor %}
+            </ul>
+            </p>
+        {% endif %}
+    </div>
+
+    <div class="field">
+        <label class="label">Capcha</label>
+        <div class="columns">
+            <div class="column is-narrow">
+                <img src="{{ captchaImage }}"/>
+            </div>
+            <div class="column is-narrow">
+                <div class="control">
+                    <input class="input {% if errors.captchaCode %}is-danger{% endif %}"
+                           type="text"
+                           name="captchaCode"
+                           placeholder="code from the image">
+                    {% if errors.captchaCode %}
+                        <p class="help is-danger">
+                            The captcha code does not match
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="column is-narrow">
+                <button class="button has-tooltip-right"
+                        data-tooltip="This capcha is generated without google (reCapcha) to protect your privacy">
+                    <span class="icon">
+                        <i class="fas fa-info"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="control">
+            <label class="checkbox">
+                <input type="checkbox">
+                I agree to the <a href="/terms">terms and conditions</a>
+            </label>
+        </div>
+    </div>
+
+    <div class="field has-text-right">
+        <input class="button is-primary" type="submit" value="Sign up">
+    </div>
+
+</form>
