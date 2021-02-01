@@ -7,6 +7,7 @@ use PHPUnit\Framework\TestCase;
 /**
  * @covers \SharedBookshelf\Configuration
  * @uses   \SharedBookshelf\FsWrapper
+ * @uses   \SharedBookshelf\Environment
  */
 final class ConfigurationTest extends TestCase
 {
@@ -26,6 +27,12 @@ final class ConfigurationTest extends TestCase
         $this->assertEquals($expected, $this->subject->getBasePath());
     }
 
+    public function testGetErrorLog(): void
+    {
+        $expected = '/testPath/logs/error.log';
+        $this->assertEquals($expected, $this->subject->getErrorLog());
+    }
+
     public function testGetDataPath(): void
     {
         $expected = '/testPath/data/';
@@ -42,6 +49,12 @@ final class ConfigurationTest extends TestCase
     {
         $expected = '/testPath/cache/';
         $this->assertEquals($expected, $this->subject->getCachePath());
+    }
+
+    public function testGetEnvironment(): void
+    {
+        $expected = 'unit_test';
+        $this->assertEquals($expected, $this->subject->getEnvironment()->asString());
     }
 
     public function testCanDebugLevel(): void

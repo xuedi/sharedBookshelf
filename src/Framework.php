@@ -78,7 +78,7 @@ class Framework
         if ($this->logger) {
             $this->logger->critical('Exception', ['exception' => $exception]);
         }
-        if (!$this->config->getEnvironment()->isIsUnitTest()) {
+        if (!$this->config->getEnvironment()->isUnitTest()) {
             $actualException = get_class($exception);
             throw new RuntimeException("Could not find a registered error controller for '$actualException'");
         }

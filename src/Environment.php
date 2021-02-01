@@ -33,7 +33,7 @@ class Environment
         return $this->env === self::$staging;
     }
 
-    public function isIsUnitTest(): bool
+    public function isUnitTest(): bool
     {
         return $this->env === self::$unitTest;
     }

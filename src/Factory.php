@@ -37,7 +37,7 @@ class Factory
         $this->framework->run();
     }
 
-    // ### Controller ###
+    // #################### Controller ####################
 
     private function createHomeController(): HomeController
     {
@@ -59,17 +59,8 @@ class Factory
         return new Error404Controller($this->twig, $this->config);
     }
 
-    // ### Other stuff ###
-
-    private function createFramework(): Framework
-    {
-        return new Framework(
-            $this->createTwig(),
-            $this->config,
-            $this->createSlim(),
-            $this->createLogger()
-        );
-    }
+    // #################### FactoryStub ####################
+    // @codeCoverageIgnoreStart
 
     protected function createTwig(): Twig
     {
@@ -88,13 +79,26 @@ class Factory
         return new TwigTemplates($this->config->getTemplatePath());
     }
 
-    private function createSlim(): Slim
-    {
-        return AppFactory::create();
-    }
-
     protected function createLogger(): LoggerInterface
     {
         return new SimpleLogger($this->config->getErrorLog(), 'error');
+    }
+
+    // @codeCoverageIgnoreEnd
+    // #################### regular creators ####################
+
+    private function createFramework(): Framework
+    {
+        return new Framework(
+            $this->createTwig(),
+            $this->config,
+            $this->createSlim(),
+            $this->createLogger()
+        );
+    }
+
+    private function createSlim(): Slim
+    {
+        return AppFactory::create();
     }
 }
