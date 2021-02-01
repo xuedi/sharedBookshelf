@@ -15,15 +15,13 @@ use Twig\Environment as Twig;
 /**
  * @codingStandardsIgnoreFile
  * @codeCoverageIgnoreStart
+ * @psalm-suppress UndefinedMagicMethod
  */
 class SignupController implements Controller
 {
     private Twig $twig;
     private Configuration $config;
     private CaptchaBuilder $captcha;
-    /**
-     * @var FormValidator
-     */
     private FormValidator $formValidator;
 
     public function __construct(Twig $twig, Configuration $config, CaptchaBuilder $captcha, FormValidator $formValidator)
@@ -105,6 +103,6 @@ class SignupController implements Controller
         $this->captcha->build(100, 36);
         $_SESSION['captchaCode'] = strtolower($this->captcha->getPhrase());
 
-        return $this->captcha->inline();
+        return (string)$this->captcha->inline();
     }
 }
