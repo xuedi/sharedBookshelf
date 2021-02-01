@@ -10,7 +10,7 @@ and handover requests
 Minimal dependencies, i used slim for routing, twig for the templates, test tools as phar
 
 ##### PHP modules
-- PHP >= 7.4
+- PHP >= 8.0
 - ext-xdebug (dev)
 - ext-simplexml (dev)
 
