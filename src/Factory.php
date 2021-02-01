@@ -48,6 +48,7 @@ class Factory
 
     public function run(): void
     {
+        $this->framework = $this->createFramework();
         $this->framework->run();
     }
 

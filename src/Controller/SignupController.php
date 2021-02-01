@@ -55,9 +55,13 @@ class SignupController implements Controller
         return $response;
     }
 
+    /**
+     * Validator issues
+     * @psalm-suppress UndefinedMagicMethod
+     * @psalm-suppress MixedMethodCall
+     */
     public function save(Request $request, Response $response, array $args = []): Response
     {
-        $formErrors = [];
         $formData = $request->getParsedBody();
 
         // set filter rules
@@ -101,7 +105,7 @@ class SignupController implements Controller
     {
         $this->captcha->setBackgroundColor(220, 220, 220);
         $this->captcha->build(100, 36);
-        $_SESSION['captchaCode'] = strtolower($this->captcha->getPhrase());
+        $_SESSION['captchaCode'] = strtolower((string)$this->captcha->getPhrase());
 
         return (string)$this->captcha->inline();
     }
