@@ -9,10 +9,6 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use Twig\Environment as Twig;
 
-/**
- * @codingStandardsIgnoreFile
- * @codeCoverageIgnoreStart
- */
 class ImagesController implements Controller
 {
     private Twig $twig;

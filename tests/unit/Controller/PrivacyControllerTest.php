@@ -9,7 +9,7 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use Twig\Environment as Twig;
 
 /**
- * @covers \SharedBookshelf\Controller\HomeController
+ * @covers \SharedBookshelf\Controller\PrivacyController
  * @uses   \SharedBookshelf\Controller\Settings\Collection
  * @uses   \SharedBookshelf\Controller\Settings\HttpType
  * @uses   \SharedBookshelf\Controller\Settings\HttpType
@@ -17,18 +17,18 @@ use Twig\Environment as Twig;
  * @uses   \SharedBookshelf\Controller\Settings\Path
  * @uses   \SharedBookshelf\Controller\Settings\Setting
  */
-final class HomeControllerTest extends TestCase
+final class PrivacyControllerTest extends TestCase
 {
     use ControllerTrait;
 
-    private HomeController $subject;
+    private PrivacyController $subject;
 
     public function setUp(): void
     {
         $this->twigMock = $this->getMockBuilder(Twig::class)->disableOriginalConstructor()->getMock();
         $this->configMock = $this->createMock(Configuration::class);
 
-        $this->subject = new HomeController(
+        $this->subject = new PrivacyController(
             $this->twigMock,
             $this->configMock
         );
@@ -41,7 +41,7 @@ final class HomeControllerTest extends TestCase
 
     public function testCanRenderResponse(): void
     {
-        $this->assertRenderedTemplate('home.twig');
+        $this->assertRenderedTemplate('privacy.twig');
 
         $actual = $this->subject->index($this->requestMock, $this->responseMock);
 

@@ -4,13 +4,15 @@ namespace SharedBookshelf;
 
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use SimpleLog\Logger as SimpleLogger;
 use Twig\Environment as Twig;
 
 /**
  * @covers \SharedBookshelf\Factory
  * @uses   \SharedBookshelf\Configuration
  * @uses   \SharedBookshelf\Controller\HomeController
+ * @uses   \SharedBookshelf\Controller\PrivacyController
+ * @uses   \SharedBookshelf\Controller\TermsController
+ * @uses   \SharedBookshelf\Controller\ImagesController
  * @uses   \SharedBookshelf\Controller\Settings\Collection
  * @uses   \SharedBookshelf\Controller\Settings\HttpType
  * @uses   \SharedBookshelf\Controller\Settings\Method

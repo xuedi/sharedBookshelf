@@ -9,10 +9,6 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use Twig\Environment as Twig;
 
-/**
- * @codingStandardsIgnoreFile
- * @codeCoverageIgnoreStart
- */
 class PrivacyController implements Controller
 {
     private Twig $twig;
@@ -33,9 +29,8 @@ class PrivacyController implements Controller
 
     public function index(Request $request, Response $response, array $args = []): Response
     {
-        $template = $this->twig->load('privacy.twig');
         $response->getBody()->write(
-            $template->render([])
+            $this->twig->load('privacy.twig')->render([])
         );
 
         return $response;

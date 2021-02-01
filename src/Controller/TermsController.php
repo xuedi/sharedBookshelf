@@ -9,10 +9,6 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use Twig\Environment as Twig;
 
-/**
- * @codingStandardsIgnoreFile
- * @codeCoverageIgnoreStart
- */
 class TermsController implements Controller
 {
     private Twig $twig;
