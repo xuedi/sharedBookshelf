@@ -2,12 +2,11 @@
 
 namespace SharedBookshelf\Controller;
 
-use Awurth\SlimValidation\Validator as FormValidator;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use Respect\Validation\Validator as V;
 use SharedBookshelf\Configuration;
+use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use Twig\Environment as Twig;
@@ -23,9 +22,9 @@ class SignupController implements Controller
     private Twig $twig;
     private Configuration $config;
     private CaptchaBuilder $captcha;
-    private FormValidator $formValidator;
+    private SignupFormValidator $formValidator;
 
-    public function __construct(Twig $twig, Configuration $config, CaptchaBuilder $captcha, FormValidator $formValidator)
+    public function __construct(Twig $twig, Configuration $config, CaptchaBuilder $captcha, SignupFormValidator $formValidator)
     {
         $this->twig = $twig;
         $this->config = $config;
@@ -64,23 +63,8 @@ class SignupController implements Controller
     public function save(Request $request, Response $response, array $args = []): Response
     {
         $formData = $request->getParsedBody();
+        $formErrors = $this->formValidator->validate($request);
 
-        // set filter rules
-        $this->formValidator->validate($request, [
-            'username' => V::length(4, 32)->alnum('_')->noWhitespace(),
-            'password' => V::length(4, 32)->alnum('_'),
-            'email' => V::notBlank()->email(),
-        ]);
-
-        // check form validation and captcha code
-        $formErrors = $this->formValidator->getErrors();
-        $captchaSession = (string)($_SESSION['captchaCode'] ?? '');
-        $captchaForm = strtolower((string)($formData['captchaCode'] ?? 'RandomNotMatching'));
-        if ($captchaForm != $captchaSession) {
-            $formErrors['captchaCode'] = 'The capcha does not match';
-        }
-
-        // success, no errors found
         if (empty($formErrors)) {
             return $response->withStatus(302)->withHeader('Location', '/profil');
         }

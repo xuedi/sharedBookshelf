@@ -13,6 +13,7 @@ use Twig\Environment as Twig;
  * @uses   \SharedBookshelf\Controller\PrivacyController
  * @uses   \SharedBookshelf\Controller\TermsController
  * @uses   \SharedBookshelf\Controller\ImagesController
+ * @uses   \SharedBookshelf\Controller\FormValidators\SignupFormValidator
  * @uses   \SharedBookshelf\Controller\Settings\Collection
  * @uses   \SharedBookshelf\Controller\Settings\HttpType
  * @uses   \SharedBookshelf\Controller\Settings\Method

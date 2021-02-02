@@ -7,6 +7,7 @@ use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Log\LoggerInterface;
 use SharedBookshelf\Controller\Errors\Error404Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
+use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\HomeController;
 use SharedBookshelf\Controller\ImagesController;
 use SharedBookshelf\Controller\LoginController;
@@ -76,6 +77,13 @@ class Factory
             $this->createTwig(),
             $this->createConfiguration(),
             $this->createCaptchaBuilder(),
+            $this->createSignupFormValidator()
+        );
+    }
+
+    private function createSignupFormValidator(): SignupFormValidator
+    {
+        return new SignupFormValidator(
             $this->createFormValidator()
         );
     }
