@@ -3,8 +3,15 @@
 namespace SharedBookshelf;
 
 use Awurth\SlimValidation\Validator as FormValidator;
+use Doctrine\DBAL\Types\Type as DbalType;
+use Doctrine\ORM\Configuration as DoctrineConfiguration;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\Tools\Console\ConsoleRunner;
+use Doctrine\ORM\Tools\Setup;
+use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Log\LoggerInterface;
+use Ramsey\Uuid\Doctrine\UuidType;
 use SharedBookshelf\Controller\Errors\Error404Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
@@ -17,6 +24,7 @@ use SharedBookshelf\Controller\TermsController;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;
+use Symfony\Component\Console\Helper\HelperSet;
 use Twig\Environment as Twig;
 use Twig\Loader\FilesystemLoader as TwigTemplates;
 
@@ -27,6 +35,7 @@ class Factory
 {
     protected ?Twig $twig = null;
     protected ?Configuration $configuration = null;
+    protected ?EntityManager $em = null;
     protected ?Framework $framework = null;
     private File $configFile;
 
@@ -51,6 +60,13 @@ class Factory
     {
         $this->framework = $this->createFramework();
         $this->framework->run();
+    }
+
+    public function getDoctrineCliHelperSet(): HelperSet
+    {
+        return ConsoleRunner::createHelperSet(
+            $this->createEntityManager()
+        );
     }
 
     // #################### Controller ####################
@@ -201,5 +217,37 @@ class Factory
     private function createFsWrapper(): FsWrapper
     {
         return new FsWrapper();
+    }
+
+    private function createEntityManager(): EntityManager
+    {
+        DbalType::addType('uuid', UuidType::class);
+
+        return EntityManager::create(
+            $this->createDatabaseConnection(),
+            $this->createDatabaseConfig()
+        );
+    }
+
+    private function createDatabaseConnection(): array
+    {
+        $dbConfig = $this->createConfiguration()->getDatabase();
+        return [
+            'dbname' => $dbConfig->getDbname(),
+            'user' => $dbConfig->getUsername(),
+            'password' => $dbConfig->getPassword(),
+            'host' => $dbConfig->getHost(),
+            'driver' => 'pdo_mysql',
+        ];
+    }
+
+    private function createDatabaseConfig(): DoctrineConfiguration
+    {
+        $setup = Setup::createConfiguration(true);
+        $setup->setMetadataDriverImpl(
+            new StaticPHPDriver(__DIR__ . '/Entities')
+        );
+
+        return $setup;
     }
 }

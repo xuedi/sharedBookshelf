@@ -28,7 +28,7 @@ class Framework
         $this->slim = $slim;
         $this->logger = $logger;
 
-        //$this->slim->addErrorMiddleware(true, true, true);
+        $this->slim->addErrorMiddleware(true, true, true);
     }
 
     public function registerController(Controller $controller): void

@@ -31,6 +31,12 @@ update_tools: ## Upgrade Tools & Composer major versions
 run: ## basic clearing of history and screen of terminal
 	php -S localhost:8080 -t public public/index.php
 
+database_info: ## get entity information
+	php ./vendor/bin/doctrine orm:info
+
+database_generate: ## generate database from entity information
+	php ./vendor/bin/doctrine orm:generate-entities
+
 test: test_unit test_psalm test_sniff## Run all tests
 
 test_unit: ## run unit tests

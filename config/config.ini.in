@@ -1,0 +1,10 @@
+
+[general]
+debug = 1
+dataPath = 'data'
+
+[database]
+name = ''
+username = ''
+password = ''
+host = '127.0.0.1'
