@@ -2,6 +2,8 @@
 
 namespace SharedBookshelf\Controller;
 
+use Doctrine\ORM\EntityRepository;
+use Doctrine\Persistence\ObjectRepository;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
@@ -23,13 +25,21 @@ class SignupController implements Controller
     private Configuration $config;
     private CaptchaBuilder $captcha;
     private SignupFormValidator $formValidator;
+    private EntityRepository $userRepository;
 
-    public function __construct(Twig $twig, Configuration $config, CaptchaBuilder $captcha, SignupFormValidator $formValidator)
+    public function __construct(
+        Twig $twig,
+        Configuration $config,
+        CaptchaBuilder $captcha,
+        SignupFormValidator $formValidator,
+        EntityRepository $userRepository
+    )
     {
         $this->twig = $twig;
         $this->config = $config;
         $this->captcha = $captcha;
         $this->formValidator = $formValidator;
+        $this->userRepository = $userRepository;
     }
 
     public function getSettings(): ControllerSettings
@@ -48,6 +58,9 @@ class SignupController implements Controller
             'captchaImage' => $this->getCaptchaImage(),
         ];
 
+        $exist = $this->userRepository->findByUsername('xuedi');
+        var_dump($exist);
+
         $response->getBody()->write(
             $template->render($data)
         );
@@ -64,6 +77,10 @@ class SignupController implements Controller
     {
         $formData = $request->getParsedBody();
         $formErrors = $this->formValidator->validate($request);
+
+
+        $exist = $this->userRepository->findBy(['username' => $formData['username']]);
+        var_dump($exist);
 
         if (empty($formErrors)) {
             return $response->withStatus(302)->withHeader('Location', '/profil');

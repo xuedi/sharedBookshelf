@@ -21,6 +21,8 @@ use SharedBookshelf\Controller\LoginController;
 use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
+use SharedBookshelf\Entities\User;
+use SharedBookshelf\Repositories\UserRepository;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;
@@ -93,7 +95,8 @@ class Factory
             $this->createTwig(),
             $this->createConfiguration(),
             $this->createCaptchaBuilder(),
-            $this->createSignupFormValidator()
+            $this->createSignupFormValidator(),
+            $this->createEntityManager()->getRepository(User::class)
         );
     }
 
@@ -183,6 +186,22 @@ class Factory
         ]);
     }
 
+    private function createEntityManager(): EntityManager
+    {
+        if ($this->em !== null) {
+            return $this->em;
+        }
+
+        DbalType::addType('uuid', UuidType::class);
+
+        $this->em = EntityManager::create(
+            $this->createDatabaseConnection(),
+            $this->createDatabaseConfig()
+        );
+
+        return $this->em;
+    }
+
     private function createLogger(): LoggerInterface
     {
         $channel = 'error';
@@ -217,16 +236,6 @@ class Factory
     private function createFsWrapper(): FsWrapper
     {
         return new FsWrapper();
-    }
-
-    private function createEntityManager(): EntityManager
-    {
-        DbalType::addType('uuid', UuidType::class);
-
-        return EntityManager::create(
-            $this->createDatabaseConnection(),
-            $this->createDatabaseConfig()
-        );
     }
 
     private function createDatabaseConnection(): array

@@ -2,28 +2,19 @@
 
 namespace SharedBookshelf\Entities;
 
-use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Ramsey\Uuid\Uuid;
+use SharedBookshelf\Repositories\UserRepository;
 
-class User
+class User extends EntityBase implements Entity
 {
-    private Uuid $id;
-    private string $username;
-    private string $password;
+    private string $username = '';
+    private string $password = '';
 
-    public static function loadMetadata(ClassMetadata $metadata)
+    public static function loadMetadata(ClassMetadata $metadata): void
     {
-        $builder = new ClassMetadataBuilder($metadata);
-
-        $builder->createField('id', 'uuid')->makePrimaryKey()->generatedValue()->build();
-        $builder->addField('username', 'string');
-        $builder->addField('password', 'string');
-    }
-
-    public function getId(): Uuid
-    {
-        return $this->id;
+        self::$builder->setCustomRepositoryClass(UserRepository::class);
+        self::$builder->addField('username', 'string');
+        self::$builder->addField('password', 'string');
     }
 
     public function getUsername(): string
@@ -35,5 +26,4 @@ class User
     {
         return $this->password;
     }
-
 }

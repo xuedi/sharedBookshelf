@@ -2,6 +2,7 @@
 [general]
 debug = 1
 dataPath = 'data'
+environment = 'development'
 
 [database]
 name = ''

@@ -11,6 +11,7 @@ class Configuration
     private string $cache;
     private string $errorLog;
     private DatabaseConfig $database;
+    private Environment $environment;
 
     public function __construct(FsWrapper $fsWrapper, File $configFile)
     {
@@ -20,12 +21,13 @@ class Configuration
         $this->templates = $this->basePath . 'templates/';
         $this->cache = $this->basePath . 'cache/';
         $this->errorLog = $this->basePath . 'logs/error.log';
-        $this->debugLevel = 2;
+        $this->debugLevel = (int)($data['general']['environment'] ?? 1);
+        $this->environment = new Environment((string)($data['general']['environment'] ?? 'production'));
         $this->database = new DatabaseConfig(
-            (string)$data['database']['username'] ?? '',
-            (string)$data['database']['password'] ?? '',
-            (string)$data['database']['name'] ?? '',
-            (string)$data['database']['host'] ?? '',
+            (string)($data['database']['username'] ?? ''),
+            (string)($data['database']['password'] ?? ''),
+            (string)($data['database']['name'] ?? ''),
+            (string)($data['database']['host'] ?? ''),
         );
     }
 
@@ -56,7 +58,7 @@ class Configuration
 
     public function getEnvironment(): Environment
     {
-        return new Environment('unit_test');
+        return $this->environment;
     }
 
     public function getCachePath(): string
