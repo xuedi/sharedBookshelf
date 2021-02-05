@@ -2,6 +2,7 @@
 reports/
 vendor/
 
+config/config.ini
 tests/.phpunit.result.cache
 
 .cache/
