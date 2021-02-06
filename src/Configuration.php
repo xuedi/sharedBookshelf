@@ -21,7 +21,7 @@ class Configuration
         $this->templates = $this->basePath . 'templates/';
         $this->cache = $this->basePath . 'cache/';
         $this->errorLog = $this->basePath . 'logs/error.log';
-        $this->debugLevel = (int)($data['general']['environment'] ?? 1);
+        $this->debugLevel = (int)($data['general']['debug'] ?? 0);
         $this->environment = new Environment((string)($data['general']['environment'] ?? 'production'));
         $this->database = new DatabaseConfig(
             (string)($data['database']['username'] ?? ''),

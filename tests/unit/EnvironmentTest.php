@@ -25,6 +25,7 @@ final class EnvironmentTest extends TestCase
         $this->assertTrue($subject->isProduction());
         $this->assertFalse($subject->isStaging());
         $this->assertFalse($subject->isUnitTest());
+        $this->assertFalse($subject->isDevelopment());
     }
 
     public function testCanAskForStaging(): void
@@ -33,12 +34,23 @@ final class EnvironmentTest extends TestCase
         $this->assertTrue($subject->isStaging());
         $this->assertFalse($subject->isProduction());
         $this->assertFalse($subject->isUnitTest());
+        $this->assertFalse($subject->isDevelopment());
     }
 
     public function testCanAskForUnitTest(): void
     {
         $subject = new Environment('unit_test');
         $this->assertTrue($subject->isUnitTest());
+        $this->assertFalse($subject->isProduction());
+        $this->assertFalse($subject->isStaging());
+        $this->assertFalse($subject->isDevelopment());
+    }
+
+    public function testCanAskForDevelopment(): void
+    {
+        $subject = new Environment('development');
+        $this->assertTrue($subject->isDevelopment());
+        $this->assertFalse($subject->isUnitTest());
         $this->assertFalse($subject->isProduction());
         $this->assertFalse($subject->isStaging());
     }

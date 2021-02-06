@@ -8,6 +8,7 @@ use PHPUnit\Framework\TestCase;
  * @covers \SharedBookshelf\Configuration
  * @uses   \SharedBookshelf\FsWrapper
  * @uses   \SharedBookshelf\Environment
+ * @uses   \SharedBookshelf\DatabaseConfig
  */
 final class ConfigurationTest extends TestCase
 {
@@ -16,6 +17,7 @@ final class ConfigurationTest extends TestCase
     public function setUp(): void
     {
         $configFileMock = $this->createMock(File::class);
+        $configFileMock->expects($this->once())->method('asString')->willReturn(__DIR__ . '/fixtures/config.ini');
 
         $fsWrapperMock = $this->createMock(FsWrapper::class);
         $fsWrapperMock->expects($this->once())->method('realpath')->willReturn('/testPath');

@@ -8,6 +8,7 @@ class Environment
 {
     private string $env;
     private static string $production = 'production';
+    private static string $development = 'development';
     private static string $staging = 'staging';
     private static string $unitTest = 'unit_test';
 
@@ -21,6 +22,11 @@ class Environment
     public function asString(): string
     {
         return $this->env;
+    }
+
+    public function isDevelopment(): bool
+    {
+        return $this->env === self::$development;
     }
 
     public function isProduction(): bool
@@ -40,7 +46,7 @@ class Environment
 
     private function ensureValidTypes(string $type): void
     {
-        if (!in_array($type, [self::$production, self::$staging, self::$unitTest])) {
+        if (!in_array($type, [self::$production, self::$staging, self::$unitTest, self::$development])) {
             throw new RuntimeException("Invalid environment '$type'");
         }
     }

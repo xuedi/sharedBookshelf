@@ -20,6 +20,7 @@ use Twig\Environment as Twig;
  * @uses   \SharedBookshelf\Controller\Settings\Path
  * @uses   \SharedBookshelf\Controller\Settings\Setting
  * @uses   \SharedBookshelf\Environment
+ * @uses   \SharedBookshelf\Entities\User
  */
 final class FactoryTest extends TestCase
 {
