@@ -22,7 +22,6 @@ use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
 use SharedBookshelf\Entities\User;
-use SharedBookshelf\Repositories\UserRepository;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;

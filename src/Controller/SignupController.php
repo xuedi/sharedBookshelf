@@ -11,6 +11,7 @@ use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
+use SharedBookshelf\Entities\User;
 use Twig\Environment as Twig;
 
 /**
@@ -58,8 +59,10 @@ class SignupController implements Controller
             'captchaImage' => $this->getCaptchaImage(),
         ];
 
-        $exist = $this->userRepository->findByUsername('xuedi');
-        var_dump($exist);
+        $user = new User;
+        $user->setUsername('test');
+        $user->setPassword('pass');
+        $this->userRepository->save($user);
 
         $response->getBody()->write(
             $template->render($data)
@@ -79,10 +82,15 @@ class SignupController implements Controller
         $formErrors = $this->formValidator->validate($request);
 
 
-        $exist = $this->userRepository->findBy(['username' => $formData['username']]);
-        var_dump($exist);
+        if($this->userRepository->findByUsername('xuedi')!==null) {
+            $formErrors['username'] = 'the username already exist, please choose another one';
+        }
 
         if (empty($formErrors)) {
+            $user = new User;
+            $user->setUsername('test');
+            $user->setPassword('test');
+            $this->userRepository->save($user);
             return $response->withStatus(302)->withHeader('Location', '/profil');
         }
 
