@@ -7,6 +7,7 @@ use Doctrine\Persistence\ObjectRepository;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
+use RuntimeException;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
@@ -78,7 +79,7 @@ class SignupController implements Controller
         if ($validatedForm->hasErrors() === false) {
             $this->userRepository->save(new User(
                 $validatedForm->getUsername(),
-                $validatedForm->getPassword(),
+                $this->hash($validatedForm->getPassword()),
                 $validatedForm->getEmail()
             ));
             return $response->withStatus(302)->withHeader('Location', '/profil');
@@ -108,5 +109,14 @@ class SignupController implements Controller
         $_SESSION['captchaCode'] = strtolower((string)$this->captcha->getPhrase());
 
         return (string)$this->captcha->inline();
+    }
+
+    private function hash(string $password): string
+    {
+        $seasonedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
+        if (!$seasonedPassword) {
+            throw new RuntimeException('Could not salt the password');
+        }
+        return $seasonedPassword;
     }
 }
