@@ -48,8 +48,8 @@ test_unit: ## run unit tests
 	@php tests/badge_generator.php
 
 test_psalm: ## run psalm static analysis
-	@$(toolPsalm) --config='tests/psalm.xml' --show-info=false
+	@$(toolPsalm) --threads=8 --config='tests/psalm.xml' src/
 
 test_sniff: ## run psalm static analysis
-	@$(toolCodeSniffer) src/
+	@$(toolCodeSniffer) --colors -p --standard=PSR1,PSR2 --severity=1 --warning-severity=8 src/ tests/unit/
 

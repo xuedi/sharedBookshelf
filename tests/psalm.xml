@@ -2,5 +2,16 @@
 <psalm errorLevel="1">
     <projectFiles>
         <directory name="../src"/>
+        <ignoreFiles>
+            <directory name="../vendor"/>
+        </ignoreFiles>
     </projectFiles>
+    <issueHandlers>
+        <MissingPropertyType errorLevel="suppress"/>
+        <InvalidDocblock>
+            <errorLevel type="suppress">
+                <file name="../vendor/doctrine/orm/lib/Doctrine/ORM/EntityRepository.php"/>
+            </errorLevel>
+        </InvalidDocblock>
+    </issueHandlers>
 </psalm>
