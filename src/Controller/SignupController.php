@@ -55,14 +55,9 @@ class SignupController implements Controller
     {
         $template = $this->twig->load('signup.twig');
         $data = [
-            'debug' => $this->config->getDebugLevel(),
+            'debug' => $this->config->isDebug(),
             'captchaImage' => $this->getCaptchaImage(),
         ];
-
-        $user = new User;
-        $user->setUsername('test');
-        $user->setPassword('pass');
-        $this->userRepository->save($user);
 
         $response->getBody()->write(
             $template->render($data)
@@ -78,30 +73,25 @@ class SignupController implements Controller
      */
     public function save(Request $request, Response $response, array $args = []): Response
     {
-        $formData = $request->getParsedBody();
-        $formErrors = $this->formValidator->validate($request);
+        $validatedForm = $this->formValidator->validate($request);
 
-
-        if($this->userRepository->findByUsername('xuedi')!==null) {
-            $formErrors['username'] = 'the username already exist, please choose another one';
-        }
-
-        if (empty($formErrors)) {
-            $user = new User;
-            $user->setUsername('test');
-            $user->setPassword('test');
-            $this->userRepository->save($user);
+        if ($validatedForm->hasErrors() === false) {
+            $this->userRepository->save(new User(
+                $validatedForm->getUsername(),
+                $validatedForm->getPassword(),
+                $validatedForm->getEmail()
+            ));
             return $response->withStatus(302)->withHeader('Location', '/profil');
         }
 
         $template = $this->twig->load('signup.twig');
         $data = [
-            'debug' => $this->config->getDebugLevel(),
-            'errors' => $formErrors,
+            'debug' => $this->config->isDebug(),
+            'errors' => $validatedForm->getErrors(),
             'captchaImage' => $this->getCaptchaImage(),
-            'username' => $formData['username'] ?? '',
-            'password' => $formData['password'] ?? '',
-            'email' => $formData['email'] ?? '',
+            'username' => $validatedForm->getUsername(),
+            'password' => $validatedForm->getPassword(),
+            'email' => $validatedForm->getEmail(),
         ];
 
         $response->getBody()->write(

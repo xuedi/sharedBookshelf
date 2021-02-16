@@ -4,30 +4,39 @@ namespace SharedBookshelf\Entities;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Ramsey\Uuid\Doctrine\UuidGenerator;
 use Ramsey\Uuid\Uuid;
+use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Repositories\UserRepository;
 
 class User implements Entity
 {
-    private Uuid $id;
+    private UuidInterface $id;
     private string $username = '';
     private string $password = '';
+    private string $email = '';
 
+    public function __construct(string $username, string $password, string $email)
+    {
+        $this->id = Uuid::uuid4();
+        $this->username = $username;
+        $this->password = $password;
+        $this->email = $email;
+    }
+
+    /**
+     * @codeCoverageIgnore
+     */
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->createField('id', 'uuid')
-            ->makePrimaryKey()
-            ->generatedValue('CUSTOM')
-            ->setCustomIdGenerator(UuidGenerator::class)
-            ->build();
+        $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(UserRepository::class);
         $builder->addField('username', 'string');
         $builder->addField('password', 'string');
+        $builder->addField('email', 'string');
     }
 
-    public function getId(): Uuid
+    public function getId(): UuidInterface
     {
         return $this->id;
     }
@@ -37,19 +46,13 @@ class User implements Entity
         return $this->username;
     }
 
-    public function setUsername(string $username): void
-    {
-        $this->username = $username;
-    }
-
     public function getPassword(): string
     {
         return $this->password;
     }
 
-    public function setPassword(string $password): void
+    public function getEmail(): string
     {
-        $this->password = $password;
+        return $this->email;
     }
-
 }

@@ -1,6 +1,6 @@
 
 [general]
-debug = 1
+debug = true
 dataPath = 'data'
 environment = 'development'
 

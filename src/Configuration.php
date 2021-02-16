@@ -4,7 +4,7 @@ namespace SharedBookshelf;
 
 class Configuration
 {
-    private int $debugLevel;
+    private bool $debugLevel;
     private string $basePath;
     private string $dataPath;
     private string $templates;
@@ -21,7 +21,7 @@ class Configuration
         $this->templates = $this->basePath . 'templates/';
         $this->cache = $this->basePath . 'cache/';
         $this->errorLog = $this->basePath . 'logs/error.log';
-        $this->debugLevel = (int)($data['general']['debug'] ?? 0);
+        $this->debugLevel = (bool)($data['general']['debug'] ?? false); // TODO: actually look at value ^_^
         $this->environment = new Environment((string)($data['general']['environment'] ?? 'production'));
         $this->database = new DatabaseConfig(
             (string)($data['database']['username'] ?? ''),
@@ -41,7 +41,7 @@ class Configuration
         return $this->dataPath;
     }
 
-    public function getDebugLevel(): int
+    public function isDebug(): bool
     {
         return $this->debugLevel;
     }

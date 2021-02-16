@@ -9,9 +9,23 @@ use SharedBookshelf\Entities\User;
 
 class UserRepository extends EntityRepository implements ObjectRepository
 {
+    /**
+     * @codeCoverageIgnore Not going to touch UnitOfWork mocking nightmare
+     */
+    public function exist(string $username): bool
+    {
+        if ($this->findOneBy(['username' => $username])) {
+            return true;
+        }
+        return false;
+    }
+
     public function findByUsername(string $username): Query
     {
-        return $this->_em->createQuery('SELECT * FROM AppBundle\Entity\User WHERE usernamename LIKE "' . $username . '"');
+        $query = $this->_em->createQuery('SELECT * FROM AppBundle\Entity\User WHERE username LIKE :username');
+        $query->setParameter('username', $username);
+
+        return $query;
     }
 
     public function save(User $user): void

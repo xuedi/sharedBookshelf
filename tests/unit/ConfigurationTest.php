@@ -63,7 +63,13 @@ final class ConfigurationTest extends TestCase
 
     public function testCanDebugLevel(): void
     {
-        $expected = 2;
-        $this->assertEquals($expected, $this->subject->getDebugLevel());
+        $expected = true;
+        $this->assertEquals($expected, $this->subject->isDebug());
+    }
+
+    public function testCanGetDatabaseConfig(): void
+    {
+        $expected = DatabaseConfig::class;
+        $this->assertInstanceOf($expected, $this->subject->getDatabase());
     }
 }

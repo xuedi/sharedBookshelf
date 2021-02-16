@@ -12,6 +12,7 @@ use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Doctrine\UuidType;
+use SharedBookshelf\Controller\AdminController;
 use SharedBookshelf\Controller\Errors\Error404Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
@@ -27,6 +28,7 @@ use Slim\App as Slim;
 use Slim\Factory\AppFactory;
 use Symfony\Component\Console\Helper\HelperSet;
 use Twig\Environment as Twig;
+use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader as TwigTemplates;
 
 /**
@@ -47,13 +49,14 @@ class Factory
 
     public function setup(): void
     {
-        $this->framework = $this->createFramework();
+        $this->framework = $this->createFramework(); // TODO: Create controller via autoload mapping
         $this->framework->registerController($this->createHomeController());
         $this->framework->registerController($this->createLoginController());
         $this->framework->registerController($this->createSignupController());
         $this->framework->registerController($this->createImagesController());
         $this->framework->registerController($this->createTermsController());
         $this->framework->registerController($this->createPrivacyController());
+        $this->framework->registerController($this->createAdminController());
         $this->framework->registerErrorController($this->createError404Controller());
     }
 
@@ -102,7 +105,8 @@ class Factory
     private function createSignupFormValidator(): SignupFormValidator
     {
         return new SignupFormValidator(
-            $this->createFormValidator()
+            $this->createFormValidator(),
+            $this->createEntityManager()->getRepository(User::class)
         );
     }
 
@@ -127,6 +131,15 @@ class Factory
         return new PrivacyController(
             $this->createTwig(),
             $this->createConfiguration()
+        );
+    }
+
+    private function createAdminController(): AdminController
+    {
+        return new AdminController(
+            $this->createTwig(),
+            $this->createConfiguration(),
+            $this->createEntityManager()->getRepository(User::class)
         );
     }
 
@@ -175,14 +188,17 @@ class Factory
         }
 
         $config = $this->createConfiguration();
-        $cache = $config->getCachePath();
-        if ($config->getDebugLevel()) {
-            $cache = false;
+
+        $twig = new Twig($this->createTwigTemplates(), [
+            'cache' => $config->isDebug() ? false : $config->getCachePath(),
+            'debug' => $config->isDebug()
+        ]);
+
+        if ($config->isDebug()) {
+            $twig->addExtension(new DebugExtension());
         }
 
-        return new Twig($this->createTwigTemplates(), [
-            'cache' => $cache
-        ]);
+        return $twig;
     }
 
     private function createEntityManager(): EntityManager
