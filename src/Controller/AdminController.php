@@ -34,6 +34,7 @@ class AdminController implements Controller
     {
         return new ControllerSettings([
             new Setting('/admin', 'index', 'get'),
+            new Setting('/admin/books', 'books', 'get'),
         ]);
     }
 
@@ -42,6 +43,23 @@ class AdminController implements Controller
         $users = $this->userRepository->findAll();
 
         $template = $this->twig->load('admin.twig');
+        $response->getBody()->write(
+            $template->render([
+                'debug' => $this->config->isDebug(),
+                'username' => $this->auth->getUsername(),
+                'userid' => $this->auth->getId()->toString(),
+                'users' => $users
+            ])
+        );
+
+        return $response;
+    }
+
+    public function books(Request $request, Response $response, array $args = []): Response
+    {
+        $users = $this->userRepository->findAll();
+
+        $template = $this->twig->load('admin_books.twig');
         $response->getBody()->write(
             $template->render([
                 'debug' => $this->config->isDebug(),

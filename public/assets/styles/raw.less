@@ -24,7 +24,14 @@ body {
   padding: 10px;
 }
 
+.content {
+  min-height: 600px;
+}
+
 .navbar {
+  background-color: #eeeeee;
+  border-bottom: 2px solid #dbdbdb;
+
   .navbar-brand {
     font-family: 'ubuntubold';
 
@@ -34,6 +41,7 @@ body {
       margin-left: 12px;
     }
   }
+
   #profilePicture {
     width: auto;
     height: auto;
@@ -42,9 +50,7 @@ body {
   }
 }
 
-#debug {
-  position: absolute;
-  top: 60px;
-  right: 0;
-  width: 200px;
+.is-sticky	{
+  position: sticky;
+  top: 100px;
 }

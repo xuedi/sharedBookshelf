@@ -40,6 +40,7 @@ database_info: ## get entity information
 database_create: ## generate database from entity information
 	php ./vendor/bin/doctrine orm:schema-tool:drop --force
 	php ./vendor/bin/doctrine orm:schema-tool:create
+	php ./config/executeFixtures.php
 
 test: test_unit test_psalm test_sniff## Run all tests
 

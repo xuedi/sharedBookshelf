@@ -30,6 +30,7 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Twig\Environment as Twig;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader as TwigTemplates;
+use Doctrine\Common\DataFixtures\Loader as DoctrineFixtureLoader;
 
 /**
  * @codeCoverageIgnore
@@ -70,6 +71,14 @@ class Factory
     {
         return ConsoleRunner::createHelperSet(
             $this->createEntityManager()
+        );
+    }
+
+    public function createFixtureExecutor(): FixtureExecutor
+    {
+        return new FixtureExecutor(
+            $this->createEntityManager(),
+            $this->createFixtureLoader()
         );
     }
 
@@ -283,5 +292,10 @@ class Factory
         return new Auth(
             $this->createEntityManager()->getRepository(User::class)
         );
+    }
+
+    private function createFixtureLoader(): DoctrineFixtureLoader
+    {
+        return new DoctrineFixtureLoader();
     }
 }

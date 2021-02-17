@@ -3,35 +3,42 @@
 <head>
     <meta charset="UTF-8">
     <title>SharedBookshelf</title>
-    <link rel="icon" type="image/png" sizes="128x128"  href="/assets/images/logo.png">
+    <link rel="icon" type="image/png" sizes="128x128" href="/assets/images/logo.png">
 
     <link rel="stylesheet" href="/assets/styles/bulma.css">
     <link rel="stylesheet" href="/assets/styles/bulma_tooltip.css">
-    <link rel="stylesheet/less" type="text/css" href="/assets/styles/raw.less" />
-    <script src="/assets/javascript/less-dev.js" ></script>
+    <link rel="stylesheet/less" type="text/css" href="/assets/styles/raw.less"/>
+    <script src="/assets/javascript/less-dev.js"></script>
     <script src="/assets/javascript/bulma.js"></script>
 </head>
 <body>
-{% include 'layout/top.twig' %}
 
-    <div class="container">
-    {% block content %}{% endblock %}
-    </div>
+    {% include 'layout/top.twig' %}
 
-    <div id="debug">
-        {% include 'layout/debug.twig' %}
-    </div>
+    <section class="section mr-0 ml-0">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-2">
+                    <div class="is-sticky">
+                        {% block sidebar %}{% endblock %}
+                    </div>
+                </div>
+                <div class="column is-8 mt-6">
+                    {% block content %}{% endblock %}
+                </div>
+                <div class="column is-2">
+                    <div class="is-sticky">
+                        {% include 'layout/debug.twig' %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <script>
-        var burgerMenu = document.querySelector('.navbar-burger');
+    <section class="section p-0">
+        {% include 'layout/footer.twig' %}
+    </section>
 
-        burgerMenu.onclick = function() {
-            document.querySelector('#hamburgerContent').classList.toggle('is-active')
-            //document.querySelector('.dropdown-menu').classList.toggle('is-active')
-            document.querySelector('.navbar-burger').classList.toggle('is-active')
-        }
-    </script>
-
-    {% include 'layout/footer.twig' %}
+    <script src="/assets/javascript/custom.js"></script>
 </body>
 </html>
