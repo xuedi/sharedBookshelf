@@ -13,6 +13,7 @@ use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
+use SharedBookshelf\Crypto;
 use SharedBookshelf\Entities\User;
 use Twig\Environment as Twig;
 
@@ -30,6 +31,7 @@ class SignupController implements Controller
     private SignupFormValidator $formValidator;
     private EntityRepository $userRepository;
     private Auth $auth;
+    private Crypto $crypto;
 
     public function __construct(
         Twig $twig,
@@ -37,7 +39,8 @@ class SignupController implements Controller
         CaptchaBuilder $captcha,
         SignupFormValidator $formValidator,
         EntityRepository $userRepository,
-        Auth $auth
+        Auth $auth,
+        Crypto $crypto
     )
     {
         $this->twig = $twig;
@@ -46,6 +49,7 @@ class SignupController implements Controller
         $this->formValidator = $formValidator;
         $this->userRepository = $userRepository;
         $this->auth = $auth;
+        $this->crypto = $crypto;
     }
 
     public function getSettings(): ControllerSettings
@@ -83,7 +87,7 @@ class SignupController implements Controller
         if ($validatedForm->hasErrors() === false) {
             $user = new User(
                 $validatedForm->getUsername(),
-                $this->hash($validatedForm->getPassword()),
+                $this->crypto->buildPasswordHash($validatedForm->getPassword()),
                 $validatedForm->getEmail()
             );
             $this->userRepository->save($user);
@@ -115,14 +119,5 @@ class SignupController implements Controller
         $_SESSION['captchaCode'] = strtolower((string)$this->captcha->getPhrase());
 
         return (string)$this->captcha->inline();
-    }
-
-    private function hash(string $password): string
-    {
-        $seasonedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => 12]);
-        if (!$seasonedPassword) {
-            throw new RuntimeException('Could not salt the password');
-        }
-        return $seasonedPassword;
     }
 }

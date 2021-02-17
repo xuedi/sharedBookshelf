@@ -109,7 +109,8 @@ class Factory
             $this->createCaptchaBuilder(),
             $this->createSignupFormValidator(),
             $this->createEntityManager()->getRepository(User::class),
-            $this->createAuth()
+            $this->createAuth(),
+            $this->createCrypto()
         );
     }
 
@@ -297,5 +298,10 @@ class Factory
     private function createFixtureLoader(): DoctrineFixtureLoader
     {
         return new DoctrineFixtureLoader();
+    }
+
+    private function createCrypto(): Crypto
+    {
+        return new Crypto();
     }
 }

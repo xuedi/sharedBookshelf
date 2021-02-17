@@ -15,11 +15,11 @@ class User implements Entity
     private string $passwordHash = '';
     private string $email = '';
 
-    public function __construct(string $username, string $password, string $email)
+    public function __construct(string $username, string $passwordHash, string $email)
     {
         $this->id = Uuid::uuid4();
         $this->username = $username;
-        $this->passwordHash = $password;
+        $this->passwordHash = $passwordHash;
         $this->email = $email;
     }
 
