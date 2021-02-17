@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace SharedBookshelf;
+namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;

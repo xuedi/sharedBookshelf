@@ -66,9 +66,29 @@ class Book implements Entity
         return $this->author;
     }
 
+    public function getCountry(): string
+    {
+        return $this->country;
+    }
+
+    public function getLanguage(): Language
+    {
+        return $this->language;
+    }
+
+    public function getPages(): int
+    {
+        return $this->pages;
+    }
+
     public function getTitle(): string
     {
         return $this->title;
+    }
+
+    public function getYear(): int
+    {
+        return $this->year;
     }
 
     public function getEan(): string

@@ -21,6 +21,7 @@ use Twig\Environment as Twig;
  * @uses   \SharedBookshelf\Controller\Settings\Setting
  * @uses   \SharedBookshelf\Environment
  * @uses   \SharedBookshelf\Entities\User
+ * @uses   \SharedBookshelf\Auth
  */
 final class FactoryTest extends TestCase
 {
