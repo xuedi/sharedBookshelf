@@ -11,21 +11,21 @@ use SharedBookshelf\Repositories\BookRepository;
 class Book implements Entity
 {
     private UuidInterface $id;
-    private string $author = '';
+    private Author $author;
     private string $country = '';
-    private string $language = '';
-    private string $pages = '';
+    private Language $language;
+    private int $pages = 0;
     private string $title = '';
-    private string $year = '';
+    private int $year = 0;
     private string $ean = '';
 
     public function __construct(
-        string $author,
+        Author $author,
         string $country,
-        string $language,
-        string $pages,
+        Language $language,
+        int $pages,
         string $title,
-        string $year,
+        int $year,
         string $ean
     )
     {
@@ -47,12 +47,12 @@ class Book implements Entity
         $builder = new ClassMetadataBuilder($metadata);
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
-        $builder->addField('author', 'string');
+        $builder->addManyToOne('author', 'Author');
         $builder->addField('country', 'string');
-        $builder->addField('language', 'string');
-        $builder->addField('pages', 'string');
+        $builder->addManyToOne('language', 'Language');
+        $builder->addField('pages', 'smallint');
         $builder->addField('title', 'string');
-        $builder->addField('year', 'string');
+        $builder->addField('year', 'smallint');
         $builder->addField('ean', 'string');
     }
 
@@ -61,7 +61,7 @@ class Book implements Entity
         return $this->id;
     }
 
-    public function getAuthor(): string
+    public function getAuthor(): Author
     {
         return $this->author;
     }

@@ -2,18 +2,37 @@
 
 namespace SharedBookshelf\Fixtures;
 
-use Doctrine\Common\DataFixtures\FixtureInterface;
+use Doctrine\Common\DataFixtures\AbstractFixture;
+use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Entities\Book;
 
-class BookDataLoader implements FixtureInterface
+class BookDataLoader extends AbstractFixture implements DependentFixtureInterface
 {
+    public function getDependencies()
+    {
+        return [
+            LanguageDataLoader::class,
+            AuthorDataLoader::class,
+        ];
+    }
+
     public function load(ObjectManager $manager)
     {
         $data = $this->getDataProvider();
         foreach ($data as list($author, $country, $language, $pages, $title, $year)) {
             $ean = (string)rand(1000000000000, 9999999999999);
-            $book = new Book($author, $country, $language, $pages, $title, $year, $ean);
+            $authorEntity = $this->getReference('AUTHOR_' . md5($author));
+            $languageEntity = $this->getReference('LANGUAGE_' . md5($language));
+            $book = new Book(
+                $authorEntity,
+                $country,
+                $languageEntity,
+                (int)$pages,
+                $title,
+                (int)$year,
+                $ean
+            );
             $manager->persist($book);
         }
         $manager->flush();
@@ -31,7 +50,7 @@ class BookDataLoader implements FixtureInterface
             ["Unknown", "Iceland", "Old Norse", "384", "Njál's Saga", "1350"],
             ["Jane Austen", "United Kingdom", "English", "226", "Pride and Prejudice", "1813"],
             ["Honoré de Balzac", "France", "French", "443", "Le Père Goriot", "1835"],
-            ["Samuel Beckett", "Republic of Ireland", "French, English", "256", "Molloy, Malone Dies, The Unnamable, the trilogy", "1952"],
+            ["Samuel Beckett", "Republic of Ireland", "English", "256", "Molloy, Malone Dies, The Unnamable, the trilogy", "1952"],
             ["Giovanni Boccaccio", "Italy", "Italian", "1024", "The Decameron", "1351"],
             ["Jorge Luis Borges", "Argentina", "Spanish", "224", "Ficciones", "1965"],
             ["Emily Brontë", "United Kingdom", "English", "342", "Wuthering Heights", "1847"],
