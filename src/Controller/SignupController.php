@@ -8,6 +8,7 @@ use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use RuntimeException;
+use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
@@ -28,13 +29,15 @@ class SignupController implements Controller
     private CaptchaBuilder $captcha;
     private SignupFormValidator $formValidator;
     private EntityRepository $userRepository;
+    private Auth $auth;
 
     public function __construct(
         Twig $twig,
         Configuration $config,
         CaptchaBuilder $captcha,
         SignupFormValidator $formValidator,
-        EntityRepository $userRepository
+        EntityRepository $userRepository,
+        Auth $auth
     )
     {
         $this->twig = $twig;
@@ -42,6 +45,7 @@ class SignupController implements Controller
         $this->captcha = $captcha;
         $this->formValidator = $formValidator;
         $this->userRepository = $userRepository;
+        $this->auth = $auth;
     }
 
     public function getSettings(): ControllerSettings
@@ -77,11 +81,13 @@ class SignupController implements Controller
         $validatedForm = $this->formValidator->validate($request);
 
         if ($validatedForm->hasErrors() === false) {
-            $this->userRepository->save(new User(
+            $user = new User(
                 $validatedForm->getUsername(),
                 $this->hash($validatedForm->getPassword()),
                 $validatedForm->getEmail()
-            ));
+            );
+            $this->userRepository->save($user);
+            $this->auth->login($user->getId(), $user->getUsername());
             return $response->withStatus(302)->withHeader('Location', '/profil');
         }
 

@@ -12,14 +12,14 @@ class User implements Entity
 {
     private UuidInterface $id;
     private string $username = '';
-    private string $password = '';
+    private string $passwordHash = '';
     private string $email = '';
 
     public function __construct(string $username, string $password, string $email)
     {
         $this->id = Uuid::uuid4();
         $this->username = $username;
-        $this->password = $password;
+        $this->passwordHash = $password;
         $this->email = $email;
     }
 
@@ -32,7 +32,7 @@ class User implements Entity
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(UserRepository::class);
         $builder->addField('username', 'string');
-        $builder->addField('password', 'string');
+        $builder->addField('passwordHash', 'string');
         $builder->addField('email', 'string');
     }
 
@@ -46,9 +46,9 @@ class User implements Entity
         return $this->username;
     }
 
-    public function getPassword(): string
+    public function getPasswordHash(): string
     {
-        return $this->password;
+        return $this->passwordHash;
     }
 
     public function getEmail(): string

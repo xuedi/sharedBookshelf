@@ -16,7 +16,7 @@ final class UserTest extends TestCase
         $user = new User("name", "pass", "email");
 
         $this->assertEquals("name", $user->getUsername());
-        $this->assertEquals("pass", $user->getPassword());
+        $this->assertEquals("pass", $user->getPasswordHash());
         $this->assertEquals("email", $user->getEmail());
         $this->assertInstanceOf(UuidInterface::class, $user->getId());
     }

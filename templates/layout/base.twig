@@ -19,9 +19,18 @@
     </div>
 
     <div id="debug">
-        DebugLevel: {{ debug }}
         {% include 'layout/debug.twig' %}
     </div>
+
+    <script>
+        var burgerMenu = document.querySelector('.navbar-burger');
+
+        burgerMenu.onclick = function() {
+            document.querySelector('#hamburgerContent').classList.toggle('is-active')
+            //document.querySelector('.dropdown-menu').classList.toggle('is-active')
+            document.querySelector('.navbar-burger').classList.toggle('is-active')
+        }
+    </script>
 
     {% include 'layout/footer.twig' %}
 </body>

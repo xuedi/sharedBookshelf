@@ -87,7 +87,8 @@ class Factory
     {
         return new LoginController(
             $this->createTwig(),
-            $this->createConfiguration()
+            $this->createConfiguration(),
+            $this->createAuth()
         );
     }
 
@@ -98,7 +99,8 @@ class Factory
             $this->createConfiguration(),
             $this->createCaptchaBuilder(),
             $this->createSignupFormValidator(),
-            $this->createEntityManager()->getRepository(User::class)
+            $this->createEntityManager()->getRepository(User::class),
+            $this->createAuth()
         );
     }
 
@@ -139,7 +141,8 @@ class Factory
         return new AdminController(
             $this->createTwig(),
             $this->createConfiguration(),
-            $this->createEntityManager()->getRepository(User::class)
+            $this->createEntityManager()->getRepository(User::class),
+            $this->createAuth()
         );
     }
 
@@ -273,5 +276,12 @@ class Factory
         );
 
         return $setup;
+    }
+
+    private function createAuth(): Auth
+    {
+        return new Auth(
+            $this->createEntityManager()->getRepository(User::class)
+        );
     }
 }

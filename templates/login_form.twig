@@ -1,0 +1,35 @@
+<form action="/login/verify" method="post" class="box">
+
+    <input type="hidden" name="action" value="Login">
+
+    <div class="field">
+        <label class="label">Username</label>
+        <div class="control has-icons-left has-icons-right">
+            <input class="input" type="text" name="username" placeholder="Username">
+            <span class="icon is-small is-left">
+                <i class="fas fa-user"></i>
+            </span>
+        </div>
+    </div>
+
+    <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+            <input class="input" type="password" name="password" placeholder="Password">
+        </div>
+    </div>
+
+    <div class="columns">
+        <div class="column">
+            message: {{ loginFailedMessage }}
+        </div>
+        <div class="column">
+            <div class="field has-text-right">
+                <input class="button is-primary" type="submit" value="Login">
+            </div>
+        </div>
+    </div>
+
+
+
+</form>
