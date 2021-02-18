@@ -268,6 +268,9 @@ class Factory
         return new FsWrapper();
     }
 
+    /**
+     * @return array<string, mixed>
+     */
     private function createDatabaseConnection(): array
     {
         $dbConfig = $this->createConfiguration()->getDatabase();
