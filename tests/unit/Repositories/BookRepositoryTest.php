@@ -8,14 +8,13 @@ use Doctrine\ORM\Query;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 use SharedBookshelf\Entities\User;
-use SharedBookshelf\Repositories\UserRepository;
 
 /**
- * @covers \SharedBookshelf\Repositories\UserRepository
+ * @covers \SharedBookshelf\Repositories\BookRepository
  */
-final class UserRepositoryTest extends TestCase
+final class BookRepositoryTest extends TestCase
 {
-    private UserRepository $subject;
+    private BookRepository $subject;
     private MockObject|EntityManagerInterface $entityManagerMock;
     private MockObject|ClassMetadata $classMetadata;
     private MockObject|Query $queryMock;
@@ -37,26 +36,7 @@ final class UserRepositoryTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->subject = new UserRepository($this->entityManagerMock, $this->classMetadata);
-    }
-
-    public function testCanFindUsername(): void
-    {
-        $expectedUsername = 'xuedi';
-        $expectedStatement = 'SELECT * FROM AppBundle\Entity\User WHERE username LIKE :username';
-
-        $this->queryMock
-            ->expects($this->once())
-            ->method('setParameter')
-            ->with('username', $expectedUsername, null);
-
-        $this->entityManagerMock
-            ->expects($this->once())
-            ->method('createQuery')
-            ->with($expectedStatement)
-            ->willReturn($this->queryMock);
-
-        $this->subject->findByUsername($expectedUsername);
+        $this->subject = new BookRepository($this->entityManagerMock, $this->classMetadata);
     }
 
     public function testCanSave(): void

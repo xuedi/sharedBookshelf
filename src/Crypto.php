@@ -12,7 +12,7 @@ class Crypto
     {
         $seasonedPassword = password_hash($password, PASSWORD_BCRYPT, ['cost' => self::$cost]);
         if (!$seasonedPassword) {
-            throw new RuntimeException('Could not salt the password');
+            throw new RuntimeException('Could not salt the password'); // @codeCoverageIgnore
         }
         return $seasonedPassword;
     }

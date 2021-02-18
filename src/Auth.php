@@ -5,6 +5,7 @@ namespace SharedBookshelf;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use RuntimeException;
 use SharedBookshelf\Entities\User;
 
 class Auth
@@ -23,8 +24,19 @@ class Auth
         $this->userRepository = $userRepository;
     }
 
-    public function getId(): ?UuidInterface
+    public function hasId(): bool
     {
+        if ($this->userId === null) {
+            return false;
+        }
+        return true;
+    }
+
+    public function getId(): UuidInterface
+    {
+        if ($this->userId === null) { // use hasId if i can tell psalm that this is checked
+            throw new RuntimeException('Please check if hadId first');
+        }
         return $this->userId;
     }
 
@@ -39,7 +51,7 @@ class Auth
             return true;
         }
 
-        /** @var User $user */
+        /** @var ?User $user */
         $user = $this->userRepository->findOneBy([
             'username' => $username
         ]);
@@ -48,7 +60,7 @@ class Auth
             return false;
         }
 
-        if(password_verify($password, $user->getPasswordHash())) {
+        if (password_verify($password, $user->getPasswordHash())) {
             $this->login($user->getId(), $user->getUsername());
             return true;
         }
@@ -63,7 +75,7 @@ class Auth
         $this->store();
     }
 
-    public function logout()
+    public function logout(): void
     {
         $this->userId = null;
         $this->username = self::$nobody;

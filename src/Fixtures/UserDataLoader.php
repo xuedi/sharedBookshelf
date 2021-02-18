@@ -7,6 +7,9 @@ use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Crypto;
 use SharedBookshelf\Entities\User;
 
+/**
+ * @codeCoverageIgnore
+ */
 class UserDataLoader implements FixtureInterface
 {
     public function load(ObjectManager $manager)

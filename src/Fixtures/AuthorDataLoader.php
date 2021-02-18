@@ -6,6 +6,9 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Entities\Author;
 
+/**
+ * @codeCoverageIgnore
+ */
 class AuthorDataLoader extends AbstractFixture
 {
     public function load(ObjectManager $manager)

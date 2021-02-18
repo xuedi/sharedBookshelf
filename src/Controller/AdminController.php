@@ -47,7 +47,7 @@ class AdminController implements Controller
             $template->render([
                 'debug' => $this->config->isDebug(),
                 'username' => $this->auth->getUsername(),
-                'userid' => $this->auth->getId()->toString(),
+                'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
                 'users' => $users
             ])
         );
@@ -64,7 +64,7 @@ class AdminController implements Controller
             $template->render([
                 'debug' => $this->config->isDebug(),
                 'username' => $this->auth->getUsername(),
-                'userid' => $this->auth->getId()->toString(),
+                'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
                 'users' => $users
             ])
         );

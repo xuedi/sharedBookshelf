@@ -7,6 +7,9 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Entities\Book;
 
+/**
+ * @codeCoverageIgnore
+ */
 class BookDataLoader extends AbstractFixture implements DependentFixtureInterface
 {
     public function getDependencies()

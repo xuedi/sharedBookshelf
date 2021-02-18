@@ -6,6 +6,9 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Entities\Language;
 
+/**
+ * @codeCoverageIgnore
+ */
 class LanguageDataLoader extends AbstractFixture
 {
     public function load(ObjectManager $manager)

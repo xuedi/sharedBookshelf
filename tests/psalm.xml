@@ -4,6 +4,7 @@
         <directory name="../src"/>
         <ignoreFiles>
             <directory name="../vendor"/>
+            <directory name="../src/Fixtures"/>
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
@@ -13,5 +14,17 @@
                 <file name="../vendor/doctrine/orm/lib/Doctrine/ORM/EntityRepository.php"/>
             </errorLevel>
         </InvalidDocblock>
+        <DeprecatedMethod>
+            <errorLevel type="suppress">
+                <file name="../src/Entities/Author.php"/>
+                <file name="../src/Entities/Language.php"/>
+            </errorLevel>
+        </DeprecatedMethod>
+        <PropertyNotSetInConstructor>
+            <errorLevel type="suppress">
+                <file name="../src/Entities/Author.php"/>
+                <file name="../src/Entities/Language.php"/>
+            </errorLevel>
+        </PropertyNotSetInConstructor>
     </issueHandlers>
 </psalm>

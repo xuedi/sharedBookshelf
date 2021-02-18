@@ -3,6 +3,8 @@
 namespace SharedBookshelf;
 
 use Awurth\SlimValidation\Validator as FormValidator;
+use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Types\Type as DbalType;
 use Doctrine\ORM\Configuration as DoctrineConfiguration;
 use Doctrine\ORM\EntityManager;
@@ -77,7 +79,7 @@ class Factory
     public function createFixtureExecutor(): FixtureExecutor
     {
         return new FixtureExecutor(
-            $this->createEntityManager(),
+            $this->createOrmExecutor(),
             $this->createFixtureLoader()
         );
     }
@@ -303,5 +305,18 @@ class Factory
     private function createCrypto(): Crypto
     {
         return new Crypto();
+    }
+
+    private function createOrmExecutor(): ORMExecutor
+    {
+        return new ORMExecutor(
+            $this->createEntityManager(),
+            $this->createORMPurger()
+        );
+    }
+
+    private function createORMPurger(): ORMPurger
+    {
+        return new ORMPurger();
     }
 }

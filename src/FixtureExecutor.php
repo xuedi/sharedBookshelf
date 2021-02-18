@@ -4,27 +4,21 @@ namespace SharedBookshelf;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\Common\DataFixtures\Purger\ORMPurger;
-use Doctrine\ORM\EntityManager;
 
 class FixtureExecutor
 {
-    private EntityManager $entityManager;
     private Loader $loader;
+    private ORMExecutor $ormExecutor;
 
-    public function __construct(EntityManager $entityManager, Loader $loader)
+    public function __construct(ORMExecutor $ormExecutor, Loader $loader)
     {
-        $this->entityManager = $entityManager;
         $this->loader = $loader;
+        $this->ormExecutor = $ormExecutor;
     }
 
-    public function execute()
+    public function execute(): void
     {
         $this->loader->loadFromDirectory(__DIR__ . '/Fixtures');
-
-        $purger = new ORMPurger();
-
-        $executor = new ORMExecutor($this->entityManager, $purger);
-        $executor->execute($this->loader->getFixtures());
+        $this->ormExecutor->execute($this->loader->getFixtures());
     }
 }
