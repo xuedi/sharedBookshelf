@@ -1,4 +1,6 @@
 [![Actions Status](https://github.com/xuedi/sharedBookshelf/workflows/PHP-Unit/badge.svg)](https://github.com/xuedi/sharedBookshelf/actions)
+[![Actions Status](https://github.com/xuedi/sharedBookshelf/workflows/Psalm/badge.svg)](https://github.com/xuedi/sharedBookshelf/actions)
+[![Actions Status](https://github.com/xuedi/sharedBookshelf/workflows/CodeSniffer/badge.svg)](https://github.com/xuedi/sharedBookshelf/actions)
 [![Code Coverage](https://raw.githubusercontent.com/xuedi/sharedBookshelf/master/tests/badge/coverage.svg?sanitize=true)](https://github.com/xuedi/sharedBookshelf/blob/master/tests/badge_generator.php)
 
 
