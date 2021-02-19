@@ -10,6 +10,7 @@ use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\IpAddress;
 use Twig\Environment as Twig;
 
 /**
@@ -58,8 +59,9 @@ class LoginController implements Controller
         $formData = $request->getParsedBody();
         $username = (string)($formData['username'] ?? '');
         $password = (string)($formData['password'] ?? '');
+        $ip = IpAddress::fromRequest($request);
 
-        if ($this->auth->verify($username, $password)) {
+        if ($this->auth->verify($username, $password, $ip)) {
             return $response->withStatus(302)->withHeader('Location', '/admin');
         }
 

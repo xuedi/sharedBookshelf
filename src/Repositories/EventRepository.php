@@ -4,16 +4,23 @@ namespace SharedBookshelf\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
-use SharedBookshelf\Entities\User;
-use SharedBookshelf\Events\DummyEvent;
+use SharedBookshelf\Entities\Event;
 use SharedBookshelf\Events\Event as EventInterface;
-use SharedBookshelf\Events\LoginEvent;
 
 class EventRepository extends EntityRepository implements ObjectRepository
 {
-    public function save(User $user): void
+    // TODO: fix naming: entity !== eventInterface
+    public function write(EventInterface $event): void
     {
-        $this->_em->persist($user);
+        $eventEntity = new Event($event);
+
+        $this->_em->persist($eventEntity);
+        $this->_em->flush();
+    }
+
+    public function save(Event $event): void
+    {
+        $this->_em->persist($event);
         $this->_em->flush();
     }
 

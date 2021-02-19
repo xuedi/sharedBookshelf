@@ -5,6 +5,7 @@ namespace SharedBookshelf\Events;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\EventType;
 
 class DummyEvent implements Event
 {
@@ -31,5 +32,10 @@ class DummyEvent implements Event
         return [
             'dummyValue' => $this->dummy
         ];
+    }
+
+    public function getType(): EventType
+    {
+        return EventType::fromString('login');
     }
 }

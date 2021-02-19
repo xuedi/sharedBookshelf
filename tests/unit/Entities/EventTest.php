@@ -17,12 +17,11 @@ final class EventTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {
-        $eventType = EventType::fromString("dummy");
         $eventPayload = DummyEvent::generate();
 
-        $event = new Event($eventType, $eventPayload);
+        $event = new Event($eventPayload);
 
-        $this->assertEquals($eventType, $event->getType());
+        $this->assertEquals($eventPayload->getType(), $event->getType());
         $this->assertEquals(['dummyValue' => 'test'], $event->getPayload());
         $this->assertInstanceOf(DateTime::class, $event->getCreated());
         $this->assertInstanceOf(UuidInterface::class, $event->getId());

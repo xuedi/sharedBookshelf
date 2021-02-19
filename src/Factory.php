@@ -25,6 +25,7 @@ use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
 use SharedBookshelf\Entities\Book;
+use SharedBookshelf\Entities\Event;
 use SharedBookshelf\Entities\User;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
@@ -156,7 +157,8 @@ class Factory
             $this->createConfiguration(),
             $this->createAuth(),
             $this->createEntityManager()->getRepository(User::class),
-            $this->createEntityManager()->getRepository(Book::class)
+            $this->createEntityManager()->getRepository(Book::class),
+            $this->createEntityManager()->getRepository(Event::class)
         );
     }
 
@@ -298,7 +300,8 @@ class Factory
     private function createAuth(): Auth
     {
         return new Auth(
-            $this->createEntityManager()->getRepository(User::class)
+            $this->createEntityManager()->getRepository(User::class),
+            $this->createEntityManager()->getRepository(Event::class)
         );
     }
 

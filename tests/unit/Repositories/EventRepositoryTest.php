@@ -7,11 +7,16 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
+use SharedBookshelf\Entities\Event;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\Events\DummyEvent;
 use SharedBookshelf\Repositories\UserRepository;
 
 /**
  * @covers \SharedBookshelf\Repositories\EventRepository
+ * @uses   \SharedBookshelf\Entities\Event
+ * @uses   \SharedBookshelf\EventType
+ * @uses   \SharedBookshelf\Events\DummyEvent
  */
 final class EventRepositoryTest extends TestCase
 {
@@ -42,11 +47,19 @@ final class EventRepositoryTest extends TestCase
 
     public function testCanSave(): void
     {
-        $userMock = $this->createMock(User::class);
+        $eventMock = $this->createMock(Event::class);
 
-        $this->entityManagerMock->expects($this->once())->method('persist')->with($userMock);
+        $this->entityManagerMock->expects($this->once())->method('persist')->with($eventMock);
         $this->entityManagerMock->expects($this->once())->method('flush');
 
-        $this->subject->save($userMock);
+        $this->subject->save($eventMock);
+    }
+
+    public function testCanAddEventInterface(): void
+    {
+        $this->entityManagerMock->expects($this->once())->method('persist');
+        $this->entityManagerMock->expects($this->once())->method('flush');
+
+        $this->subject->write(DummyEvent::generate());
     }
 }

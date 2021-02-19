@@ -7,21 +7,26 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\Events\LoginEvent;
+use SharedBookshelf\Repositories\EventRepository;
+use SharedBookshelf\Repositories\UserRepository;
 
 class Auth
 {
     private static string $nobody = 'guest';
     private ?UuidInterface $userId;
     private string $username;
-    private EntityRepository $userRepository;
+    private EntityRepository|UserRepository $userRepository;
+    private EntityRepository|EventRepository $eventRepository;
 
-    public function __construct(EntityRepository $userRepository)
+    public function __construct(EntityRepository $userRepository, EntityRepository $eventRepository)
     {
         $this->userId = null;
         $this->username = self::$nobody;
 
         $this->attemptRestore();
         $this->userRepository = $userRepository;
+        $this->eventRepository = $eventRepository;
     }
 
     public function hasId(): bool
@@ -45,7 +50,7 @@ class Auth
         return $this->username;
     }
 
-    public function verify(string $username, string $password): bool
+    public function verify(string $username, string $password, IpAddress $ip): bool
     {
         if ($this->userId !== null) {
             return true;
@@ -61,7 +66,9 @@ class Auth
         }
 
         if (password_verify($password, $user->getPasswordHash())) {
-            $this->login($user->getId(), $user->getUsername());
+            $userId = $user->getId();
+            $this->login($userId, $user->getUsername());
+            $this->eventRepository->write(LoginEvent::fromParameters($userId, $ip));
             return true;
         }
 

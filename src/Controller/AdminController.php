@@ -9,7 +9,9 @@ use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
+use SharedBookshelf\Entities\User;
 use SharedBookshelf\Repositories\BookRepository;
+use SharedBookshelf\Repositories\EventRepository;
 use SharedBookshelf\Repositories\UserRepository;
 use Twig\Environment as Twig;
 
@@ -23,19 +25,22 @@ class AdminController implements Controller
     private Auth $auth;
     private EntityRepository|UserRepository $userRepository;
     private EntityRepository|BookRepository $bookRepository;
+    private EntityRepository|EventRepository $eventRepository;
 
     public function __construct(
         Twig $twig,
         Configuration $config,
         Auth $auth,
         EntityRepository $userRepository,
-        EntityRepository $bookRepository
+        EntityRepository $bookRepository,
+        EntityRepository $eventRepository
     ) {
         $this->twig = $twig;
         $this->config = $config;
         $this->userRepository = $userRepository;
         $this->auth = $auth;
         $this->bookRepository = $bookRepository;
+        $this->eventRepository = $eventRepository;
     }
 
     public function getSettings(): ControllerSettings
@@ -44,6 +49,7 @@ class AdminController implements Controller
             new Setting('/admin', 'index', 'get'),
             new Setting('/admin/books', 'books', 'get'),
             new Setting('/admin/users', 'users', 'get'),
+            new Setting('/admin/events', 'events', 'get'),
         ]);
     }
 
@@ -85,6 +91,28 @@ class AdminController implements Controller
                 'username' => $this->auth->getUsername(),
                 'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
                 'users' => $this->userRepository->findAll()
+            ])
+        );
+
+        return $response;
+    }
+
+    public function events(Request $request, Response $response, array $args = []): Response
+    {
+        $usernameMap = [];
+        /** @var User $user */
+        foreach ($this->userRepository->findAll() as $user) { // TODO: move to user repo
+            $usernameMap[$user->getId()->toString()] = $user->getUsername();
+        }
+
+        $template = $this->twig->load('admin_events.twig');
+        $response->getBody()->write(
+            $template->render([
+                'debug' => $this->config->isDebug(),
+                'username' => $this->auth->getUsername(),
+                'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
+                'usernameMap' => $usernameMap,
+                'events' => $this->eventRepository->findAll()
             ])
         );
 

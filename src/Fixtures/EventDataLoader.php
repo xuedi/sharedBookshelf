@@ -11,6 +11,7 @@ use SharedBookshelf\Entities\Event;
 use SharedBookshelf\Entities\User;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\EventType;
+use SharedBookshelf\IpAddress;
 
 /**
  * @codeCoverageIgnore
@@ -31,13 +32,10 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
 
             /** @var User $userEntity */
             $userEntity = $this->getReference('USER_' . md5($username));
-            $loginEvent = LoginEvent::fromParameters($userEntity);
+            $loginEvent = LoginEvent::fromParameters($userEntity, IpAddress::generate());
             $newDateTime = new DateTime('now -' . (string)$days . ' days');
 
-            $book = new Event(
-                EventType::fromString('login'),
-                $loginEvent,
-            );
+            $book = new Event($loginEvent);
 
             $this->reflectionInjection($book, $newDateTime);
 

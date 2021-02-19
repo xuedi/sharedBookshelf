@@ -1,0 +1,33 @@
+{% extends 'layout/base.twig' %}
+
+{% block content %}
+
+    <div class="content">
+        <h2>Events</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Type</th>
+                <th>Created</th>
+                <th>Payload</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for event in events %}
+                <tr>
+                    <td>{{ event.type.asString()|e }}</td>
+                    <td>{{ event.created|date('Y-m-d') }}</td>
+                    {% if event.type.asString() == 'login' %}
+                        <td><a href="/admin/user/edit?id={{ event.payload.userId|e }}">{{ usernameMap[event.payload.userId|e] }}</a>@{{ event.payload.ip|e }}</td>
+                    {% else %}
+                        <td>{{ dump(event.payload) }}</td>
+                    {% endif %}
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+
+    </div>
+
+{% endblock %}

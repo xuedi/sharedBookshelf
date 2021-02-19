@@ -9,9 +9,12 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\Repositories\EventRepository;
 
 /**
  * @covers \SharedBookshelf\Auth
+ * @uses   \SharedBookshelf\IpAddress
+ * @uses   \SharedBookshelf\Events\LoginEvent
  */
 final class AuthTest extends TestCase
 {
@@ -19,6 +22,7 @@ final class AuthTest extends TestCase
     private MockObject|EntityRepository $entityManagerMock;
     private string $expectedUsername;
     private UuidInterface $expectedUuid;
+    private MockObject|EventRepository $eventManagerMock;
 
     public function setUp(): void
     {
@@ -29,7 +33,8 @@ final class AuthTest extends TestCase
         $_SESSION['auth_user_id'] = $this->expectedUuid->toString();
 
         $this->entityManagerMock = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
-        $this->subject = new Auth($this->entityManagerMock);
+        $this->eventManagerMock = $this->getMockBuilder(EventRepository::class)->disableOriginalConstructor()->getMock();
+        $this->subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
     }
 
     public function testCanRestoreFromSession(): void
@@ -88,7 +93,7 @@ final class AuthTest extends TestCase
         unset($_SESSION['auth_username']);
         $_SESSION['auth_user_id'] = '1f090736-259e-4441-b934-7e18ddb549bd';
 
-        $subject = new Auth($this->entityManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -98,7 +103,7 @@ final class AuthTest extends TestCase
         $_SESSION['auth_username'] = 'test';
         unset($_SESSION['auth_user_id']);
 
-        $subject = new Auth($this->entityManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -106,7 +111,7 @@ final class AuthTest extends TestCase
     public function testCanNotRestoreFromSessionSinceDueToInvalidUuid(): void
     {
         $_SESSION['auth_user_id'] = 'INVALID';
-        $subject = new Auth($this->entityManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
 
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
@@ -135,8 +140,12 @@ final class AuthTest extends TestCase
             ->with(['username' => $loginUser])
             ->willReturn($userMock);
 
+        $this->eventManagerMock
+            ->expects($this->once())
+            ->method('write');
+
         $this->subject->logout(); // make sure is logged out
-        $this->assertTrue($this->subject->verify($loginUser, $loginPass));
+        $this->assertTrue($this->subject->verify($loginUser, $loginPass, IpAddress::generate()));
     }
 
     public function testDoNotVerifyWhenLoggedInAlready(): void
@@ -144,7 +153,7 @@ final class AuthTest extends TestCase
         $this->entityManagerMock->expects($this->never())->method('findOneBy');
 
         // still confirm logged in status with true
-        $this->assertTrue($this->subject->verify('test', 'test'));
+        $this->assertTrue($this->subject->verify('test', 'test', IpAddress::generate()));
     }
 
     public function testDoNotVerifyWhenUnknownUser(): void
@@ -152,7 +161,7 @@ final class AuthTest extends TestCase
         $this->entityManagerMock->expects($this->once())->method('findOneBy')->willReturn(null);
 
         $this->subject->logout(); // make sure is logged out
-        $this->assertFalse($this->subject->verify('test', 'test'));
+        $this->assertFalse($this->subject->verify('test', 'test', IpAddress::generate()));
     }
 
     public function testCanNotVerifyWithWrongCredentials(): void
@@ -173,6 +182,6 @@ final class AuthTest extends TestCase
             ->willReturn($userMock);
 
         $this->subject->logout(); // make sure is logged out
-        $this->assertFalse($this->subject->verify($loginUser, $loginPass));
+        $this->assertFalse($this->subject->verify($loginUser, $loginPass, IpAddress::generate()));
     }
 }

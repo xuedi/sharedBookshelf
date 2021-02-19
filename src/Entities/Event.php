@@ -18,10 +18,10 @@ class Event implements Entity
     private DateTime $created;
     private string $payload;
 
-    public function __construct(EventType $type, EventInterface $event)
+    public function __construct(EventInterface $event)
     {
         $this->id = Uuid::uuid4();
-        $this->type = $type->asString();
+        $this->type = $event->getType()->asString();
         $this->created = new DateTime('now');
         $this->payload = json_encode($event->asPayload());
     }
