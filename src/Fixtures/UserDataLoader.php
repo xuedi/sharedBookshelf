@@ -2,6 +2,7 @@
 
 namespace SharedBookshelf\Fixtures;
 
+use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Crypto;
@@ -10,7 +11,7 @@ use SharedBookshelf\Entities\User;
 /**
  * @codeCoverageIgnore
  */
-class UserDataLoader implements FixtureInterface
+class UserDataLoader extends AbstractFixture
 {
     public function load(ObjectManager $manager)
     {
@@ -23,6 +24,7 @@ class UserDataLoader implements FixtureInterface
                 $email
             );
             $manager->persist($user);
+            $this->addReference('USER_' . md5($username), $user);
         }
         $manager->flush();
     }

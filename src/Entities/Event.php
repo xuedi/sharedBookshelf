@@ -7,6 +7,8 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use SharedBookshelf\Events\Event as EventInterface;
+use SharedBookshelf\EventType;
 use SharedBookshelf\Repositories\EventRepository;
 
 class Event implements Entity
@@ -14,14 +16,14 @@ class Event implements Entity
     private UuidInterface $id;
     private string $type;
     private DateTime $created;
-    private array $payload;
+    private string $payload;
 
-    public function __construct(string $type, array $payload)
+    public function __construct(EventType $type, EventInterface $event)
     {
         $this->id = Uuid::uuid4();
-        $this->type = $type;
-        $this->created = new DateTime();
-        $this->payload = $payload;
+        $this->type = $type->asString();
+        $this->created = new DateTime('now');
+        $this->payload = json_encode($event->asPayload());
     }
 
     /**
@@ -42,9 +44,9 @@ class Event implements Entity
         return $this->id;
     }
 
-    public function getType(): string
+    public function getType(): EventType
     {
-        return $this->type;
+        return EventType::fromString($this->type);
     }
 
     public function getCreated(): DateTime
@@ -54,6 +56,6 @@ class Event implements Entity
 
     public function getPayload(): array
     {
-        return $this->payload;
+        return (array)json_decode($this->payload, true);
     }
 }
