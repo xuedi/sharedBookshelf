@@ -20,7 +20,8 @@ class UserDataLoader implements FixtureInterface
             $user = new User(
                 $username,
                 $crypto->buildPasswordHash($password),
-                $email);
+                $email
+            );
             $manager->persist($user);
         }
         $manager->flush();

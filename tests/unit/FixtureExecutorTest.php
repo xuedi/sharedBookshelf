@@ -4,11 +4,8 @@ namespace SharedBookshelf;
 
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
 use Doctrine\Common\DataFixtures\Loader;
-use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\EntityManagerInterface;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
 /**
  * @covers \SharedBookshelf\FixtureExecutor
@@ -35,8 +32,8 @@ final class FixtureExecutorTest extends TestCase
             $this->ormExecutorMock,
             $this->loaderMock
         );
-
     }
+
     public function testCanRetrieveData(): void
     {
         $this->loaderMock->expects($this->once())->method('loadFromDirectory');

@@ -147,5 +147,3 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
         ];
     }
 }
-
-

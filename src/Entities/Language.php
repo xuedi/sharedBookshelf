@@ -4,12 +4,11 @@ namespace SharedBookshelf\Entities;
 
 use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
-use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Repositories\BookRepository;
 
 class Language implements Entity
 {
-    private int $id;
+    private int $id = 0;
     private string $name = '';
 
     public function __construct(string $name)
@@ -23,7 +22,7 @@ class Language implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->createField('id', 'integer')->isPrimaryKey()->generatedValue()->build();
+        $builder->createField('id', 'integer')->makePrimaryKey()->generatedValue()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
         $builder->addField('name', 'string');
     }
@@ -37,5 +36,4 @@ class Language implements Entity
     {
         return $this->name;
     }
-
 }

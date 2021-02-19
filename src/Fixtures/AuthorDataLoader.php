@@ -110,5 +110,3 @@ class AuthorDataLoader extends AbstractFixture
         ];
     }
 }
-
-

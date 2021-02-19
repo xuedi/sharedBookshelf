@@ -42,7 +42,7 @@ database_create: ## generate database from entity information
 	php ./vendor/bin/doctrine orm:schema-tool:create
 	php ./config/executeFixtures.php
 
-test: test_unit test_psalm test_sniff## Run all tests
+test: test_unit test_psalm test_sniff ## Run all tests
 
 test_unit: ## run unit tests
 	@$(toolPhpunit) -c tests/phpunit.xml

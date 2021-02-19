@@ -22,7 +22,7 @@ class Author implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
-        $builder->createField('id', 'integer')->isPrimaryKey()->generatedValue()->build();
+        $builder->createField('id', 'integer')->makePrimaryKey()->generatedValue()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
         $builder->addField('name', 'string');
     }
@@ -36,5 +36,4 @@ class Author implements Entity
     {
         return $this->name;
     }
-
 }

@@ -49,5 +49,3 @@ class LanguageDataLoader extends AbstractFixture
         ];
     }
 }
-
-

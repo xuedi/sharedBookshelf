@@ -27,8 +27,7 @@ class Book implements Entity
         string $title,
         int $year,
         string $ean
-    )
-    {
+    ) {
         $this->id = Uuid::uuid4();
         $this->author = $author;
         $this->title = $title;
