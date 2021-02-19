@@ -9,6 +9,7 @@ use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
+use SharedBookshelf\Repositories\BookRepository;
 use SharedBookshelf\Repositories\UserRepository;
 use Twig\Environment as Twig;
 
@@ -19,15 +20,22 @@ class AdminController implements Controller
 {
     private Twig $twig;
     private Configuration $config;
-    private EntityRepository|UserRepository $userRepository;
     private Auth $auth;
+    private EntityRepository|UserRepository $userRepository;
+    private EntityRepository|BookRepository $bookRepository;
 
-    public function __construct(Twig $twig, Configuration $config, EntityRepository $userRepository, Auth $auth)
-    {
+    public function __construct(
+        Twig $twig,
+        Configuration $config,
+        Auth $auth,
+        EntityRepository $userRepository,
+        EntityRepository $bookRepository
+    ) {
         $this->twig = $twig;
         $this->config = $config;
         $this->userRepository = $userRepository;
         $this->auth = $auth;
+        $this->bookRepository = $bookRepository;
     }
 
     public function getSettings(): ControllerSettings
@@ -35,20 +43,18 @@ class AdminController implements Controller
         return new ControllerSettings([
             new Setting('/admin', 'index', 'get'),
             new Setting('/admin/books', 'books', 'get'),
+            new Setting('/admin/users', 'users', 'get'),
         ]);
     }
 
     public function index(Request $request, Response $response, array $args = []): Response
     {
-        $users = $this->userRepository->findAll();
-
         $template = $this->twig->load('admin.twig');
         $response->getBody()->write(
             $template->render([
                 'debug' => $this->config->isDebug(),
                 'username' => $this->auth->getUsername(),
                 'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
-                'users' => $users
             ])
         );
 
@@ -57,15 +63,28 @@ class AdminController implements Controller
 
     public function books(Request $request, Response $response, array $args = []): Response
     {
-        $users = $this->userRepository->findAll();
-
         $template = $this->twig->load('admin_books.twig');
         $response->getBody()->write(
             $template->render([
                 'debug' => $this->config->isDebug(),
                 'username' => $this->auth->getUsername(),
                 'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
-                'users' => $users
+                'books' => $this->bookRepository->findAll()
+            ])
+        );
+
+        return $response;
+    }
+
+    public function users(Request $request, Response $response, array $args = []): Response
+    {
+        $template = $this->twig->load('admin_users.twig');
+        $response->getBody()->write(
+            $template->render([
+                'debug' => $this->config->isDebug(),
+                'username' => $this->auth->getUsername(),
+                'userid' => $this->auth->hasId() ? $this->auth->getId()->toString() : null,
+                'users' => $this->userRepository->findAll()
             ])
         );
 

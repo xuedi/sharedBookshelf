@@ -24,6 +24,7 @@ use SharedBookshelf\Controller\LoginController;
 use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
+use SharedBookshelf\Entities\Book;
 use SharedBookshelf\Entities\User;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
@@ -153,8 +154,9 @@ class Factory
         return new AdminController(
             $this->createTwig(),
             $this->createConfiguration(),
+            $this->createAuth(),
             $this->createEntityManager()->getRepository(User::class),
-            $this->createAuth()
+            $this->createEntityManager()->getRepository(Book::class)
         );
     }
 

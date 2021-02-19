@@ -16,15 +16,23 @@
         <div class="navbar-start">
             <a class="navbar-item">About</a>
             <a class="navbar-item">How it works</a>
-            <a href="/admin" class="navbar-item">Admin</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a href="/admin" class="navbar-item">Admin</a>
+                <div class="navbar-dropdown">
+                    <a href="/admin/users" class="navbar-item">Users</a>
+                    <a href="/admin/books" class="navbar-item">Books</a>
+                    <a href="/admin/trust" class="navbar-item">Trust</a>
+                    <a href="/admin/events" class="navbar-item">Events</a>
+                </div>
+            </div>
         </div>
         <div class="navbar-item">
             Middle
         </div>
-            {% if userid %}
-                {% include 'layout/top_logged_in.twig' %}
-            {% else %}
-                {% include 'layout/top_logged_out.twig' %}
-            {% endif %}
+        {% if userid %}
+            {% include 'layout/top_logged_in.twig' %}
+        {% else %}
+            {% include 'layout/top_logged_out.twig' %}
+        {% endif %}
     </div>
 </nav>

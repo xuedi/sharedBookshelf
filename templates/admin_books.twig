@@ -1,23 +1,39 @@
 {% extends 'layout/base.twig' %}
 
-{% block sidebar %}
-    <p class="menu-label">
-        Administration
-    </p>
-    <ul class="menu-list">
-        <li><a>User</a></li>
-        <li><a>Books</a></li>
-        <li><a>Trust</a></li>
-        <li><a>Logs</a></li>
-    </ul>
-{% endblock %}
-
 {% block content %}
 
     <div class="content">
         <h2>Books</h2>
-        <p>
-            ;sdzkljfjkm
-        </p>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Language</th>
+                <th>Year</th>
+                <th>Popularity</th>
+                <th>Queue</th>
+                <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for book in books %}
+                <tr>
+                    <td>{{ book.title|e }}</td>
+                    <td>{{ book.author.name|e }}</td>
+                    <td>{{ book.language.name|e }}</td>
+                    <td>{{ book.year|e }}</td>
+                    <td>-</td>
+                    <td>0</td>
+                    <td>
+                        <a href="/admin/book/edit?id={{ book.id }}" class="icon"><i class="far fa-edit"></i></a>
+                        <a href="/admin/book/delete?id={{ book.id }}" class="icon"><i class="far fa-trash-alt"></i></i></a>
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
     </div>
+
 {% endblock %}
