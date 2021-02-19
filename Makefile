@@ -52,5 +52,5 @@ test_psalm: ## run psalm static analysis
 	@$(toolPsalm) --threads=8 --config='tests/psalm.xml' src/
 
 test_sniff: ## run psalm static analysis
-	@$(toolCodeSniffer) --colors -p --standard=PSR1,PSR2 --severity=1 --warning-severity=8 src/ tests/unit/
+	@$(toolCodeSniffer) --colors -p --standard=./tests/phpcs.xml --severity=1 --warning-severity=8 src/ tests/unit/
 
