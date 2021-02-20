@@ -16,8 +16,8 @@
         </InvalidDocblock>
         <PropertyNotSetInConstructor>
             <errorLevel type="suppress">
-                <file name="../src/Entities/Author.php"/>
-                <file name="../src/Entities/Language.php"/>
+                <file name="../src/Entities/AuthorEntity.php"/>
+                <file name="../src/Entities/LanguageEntity.php"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
         <MixedAssignment>
