@@ -8,21 +8,21 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Repositories\BookRepository;
 
-class Book implements Entity
+class BookEntity implements Entity
 {
     private UuidInterface $id;
-    private Author $author;
-    private Country $country;
-    private Language $language;
+    private AuthorEntity $author;
+    private CountryEntity $country;
+    private LanguageEntity $language;
     private int $pages = 0;
     private string $title = '';
     private int $year = 0;
     private string $ean = '';
 
     public function __construct(
-        Author $author,
-        Country $country,
-        Language $language,
+        AuthorEntity $author,
+        CountryEntity $country,
+        LanguageEntity $language,
         int $pages,
         string $title,
         int $year,
@@ -44,11 +44,12 @@ class Book implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
+        $builder->setTable('Book');
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
-        $builder->addManyToOne('author', 'Author');
-        $builder->addManyToOne('country', 'Country');
-        $builder->addManyToOne('language', 'Language');
+        $builder->addManyToOne('author', AuthorEntity::class);
+        $builder->addManyToOne('country', CountryEntity::class);
+        $builder->addManyToOne('language', LanguageEntity::class);
         $builder->addField('pages', 'smallint');
         $builder->addField('title', 'string');
         $builder->addField('year', 'smallint');
@@ -60,17 +61,17 @@ class Book implements Entity
         return $this->id;
     }
 
-    public function getAuthor(): Author
+    public function getAuthor(): AuthorEntity
     {
         return $this->author;
     }
 
-    public function getCountry(): Country
+    public function getCountry(): CountryEntity
     {
         return $this->country;
     }
 
-    public function getLanguage(): Language
+    public function getLanguage(): LanguageEntity
     {
         return $this->language;
     }

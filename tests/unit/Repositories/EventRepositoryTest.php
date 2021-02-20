@@ -7,14 +7,14 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use SharedBookshelf\Entities\Event;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\EventEntity;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\DummyEvent;
 use SharedBookshelf\Repositories\UserRepository;
 
 /**
  * @covers \SharedBookshelf\Repositories\EventRepository
- * @uses   \SharedBookshelf\Entities\Event
+ * @uses   \SharedBookshelf\Entities\EventEntity
  * @uses   \SharedBookshelf\EventType
  * @uses   \SharedBookshelf\Events\DummyEvent
  */
@@ -47,7 +47,7 @@ final class EventRepositoryTest extends TestCase
 
     public function testCanSave(): void
     {
-        $eventMock = $this->createMock(Event::class);
+        $eventMock = $this->createMock(EventEntity::class);
 
         $this->entityManagerMock->expects($this->once())->method('persist')->with($eventMock);
         $this->entityManagerMock->expects($this->once())->method('flush');

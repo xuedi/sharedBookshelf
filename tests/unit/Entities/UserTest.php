@@ -4,16 +4,16 @@ namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 /**
- * @covers \SharedBookshelf\Entities\User
+ * @covers \SharedBookshelf\Entities\UserEntity
  */
 final class UserTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {
-        $user = new User("name", "pass", "email");
+        $user = new UserEntity("name", "pass", "email");
 
         $this->assertEquals("name", $user->getUsername());
         $this->assertEquals("pass", $user->getPasswordHash());

@@ -5,7 +5,7 @@ namespace SharedBookshelf\Playback;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\EventType;
 use SharedBookshelf\Repositories\EventRepository;
@@ -54,7 +54,7 @@ class LoginPlayback
 
     private function getBasicUserLoginList(): array
     {
-        /** @var User $user */
+        /** @var UserEntity $user */
 
         $basicDateTime = new DateTime('1900-01-01 00:00:00');
 

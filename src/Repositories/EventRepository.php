@@ -4,7 +4,7 @@ namespace SharedBookshelf\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
-use SharedBookshelf\Entities\Event as EventEntity;
+use SharedBookshelf\Entities\EventEntity as EventEntity;
 use SharedBookshelf\Events\Event as EventInterface;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\EventType;

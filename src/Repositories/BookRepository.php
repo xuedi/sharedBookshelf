@@ -4,11 +4,11 @@ namespace SharedBookshelf\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 class BookRepository extends EntityRepository implements ObjectRepository
 {
-    public function save(User $user): void
+    public function save(UserEntity $user): void
     {
         $this->_em->persist($user);
         $this->_em->flush();

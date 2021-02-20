@@ -7,8 +7,8 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use ReflectionObject;
-use SharedBookshelf\Entities\Event;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\EventEntity;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\EventType;
 use SharedBookshelf\IpAddress;
@@ -30,12 +30,12 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
         $data = $this->getDataProvider();
         foreach ($data as list($username, $days)) {
 
-            /** @var User $userEntity */
+            /** @var UserEntity $userEntity */
             $userEntity = $this->getReference('USER_' . md5($username));
             $loginEvent = LoginEvent::fromParameters($userEntity->getId(), IpAddress::generate());
             $newDateTime = new DateTime('now -' . (string)$days . ' days');
 
-            $book = new Event($loginEvent);
+            $book = new EventEntity($loginEvent);
 
             $this->reflectionInjection($book, $newDateTime);
 
@@ -63,7 +63,7 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
         ];
     }
 
-    private function reflectionInjection(Event $book, DateTime $newDateTime): Event
+    private function reflectionInjection(EventEntity $book, DateTime $newDateTime): EventEntity
     {
         $refObject = new ReflectionObject($book);
         $refProperty = $refObject->getProperty('created');

@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Repositories\EventRepository;
 
 /**
@@ -129,7 +129,7 @@ final class AuthTest extends TestCase
         $loginUser = 'username';
         $loginPass = 'admin';
 
-        $userMock = $this->createMock(User::class);
+        $userMock = $this->createMock(UserEntity::class);
         $userMock->expects($this->once())->method('getPasswordHash')->willReturn($passwordHash);
         $userMock->expects($this->once())->method('getId')->willReturn($expectedUuid);
         $userMock->expects($this->once())->method('getUsername')->willReturn($loginUser);
@@ -170,7 +170,7 @@ final class AuthTest extends TestCase
         $loginUser = 'username';
         $loginPass = 'thisIsNotAdmin';
 
-        $userMock = $this->createMock(User::class);
+        $userMock = $this->createMock(UserEntity::class);
         $userMock->expects($this->once())->method('getPasswordHash')->willReturn($passwordHash);
         $userMock->expects($this->never())->method('getId');
         $userMock->expects($this->never())->method('getUsername');

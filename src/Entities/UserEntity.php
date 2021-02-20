@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Repositories\UserRepository;
 
-class User implements Entity
+class UserEntity implements Entity
 {
     private UuidInterface $id;
     private string $username = '';
@@ -32,6 +32,7 @@ class User implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
+        $builder->setTable('User');
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(UserRepository::class);
         $builder->addField('username', 'string');

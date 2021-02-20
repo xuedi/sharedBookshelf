@@ -7,7 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ObjectRepository;
 use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 class UserRepository extends EntityRepository implements ObjectRepository
 {
@@ -32,13 +32,13 @@ class UserRepository extends EntityRepository implements ObjectRepository
 
     public function updateLastLogin(UuidInterface $id, DateTime $created): void
     {
-        /** @var User $user */
+        /** @var UserEntity $user */
         $user = $this->findOneBy(['id' => $id]);
         $user->setLastLogin($created);
         $this->save($user);
     }
 
-    public function save(User $user): void
+    public function save(UserEntity $user): void
     {
         $this->_em->persist($user);
         $this->_em->flush();

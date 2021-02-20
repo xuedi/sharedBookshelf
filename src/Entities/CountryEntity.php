@@ -6,9 +6,9 @@ use Doctrine\ORM\Mapping\Builder\ClassMetadataBuilder;
 use Doctrine\ORM\Mapping\ClassMetadata;
 use SharedBookshelf\Repositories\BookRepository;
 
-class Author implements Entity
+class CountryEntity implements Entity
 {
-    private int $id;
+    private int $id = 0;
     private string $name = '';
 
     public function __construct(string $name)
@@ -22,6 +22,7 @@ class Author implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
+        $builder->setTable('Country');
         $builder->createField('id', 'integer')->makePrimaryKey()->generatedValue()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
         $builder->addField('name', 'string');

@@ -4,26 +4,26 @@ namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 /**
- * @covers \SharedBookshelf\Entities\Book
- * @uses   \SharedBookshelf\Entities\Author
- * @uses   \SharedBookshelf\Entities\Language
- * @uses   \SharedBookshelf\Entities\Country
+ * @covers \SharedBookshelf\Entities\BookEntity
+ * @uses   \SharedBookshelf\Entities\AuthorEntity
+ * @uses   \SharedBookshelf\Entities\LanguageEntity
+ * @uses   \SharedBookshelf\Entities\CountryEntity
  */
 final class BookTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {
-        $expectedAuthor = new Author("xuedi");
-        $expectedCountry = new Country("England");
-        $expectedLanguage = new Language("English");
+        $expectedAuthor = new AuthorEntity("xuedi");
+        $expectedCountry = new CountryEntity("England");
+        $expectedLanguage = new LanguageEntity("English");
         $expectedPages = 1234;
         $expectedTitle = "php coding";
         $expectedYear = 2020;
         $expectedEan = "1002003004009";
-        $user = new Book(
+        $user = new BookEntity(
             $expectedAuthor,
             $expectedCountry,
             $expectedLanguage,

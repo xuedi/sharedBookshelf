@@ -6,7 +6,7 @@ use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\Repositories\EventRepository;
 use SharedBookshelf\Repositories\UserRepository;
@@ -56,7 +56,7 @@ class Auth
             return true;
         }
 
-        /** @var ?User $user */
+        /** @var ?UserEntity $user */
         $user = $this->userRepository->findOneBy([
             'username' => $username
         ]);

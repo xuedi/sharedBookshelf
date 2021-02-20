@@ -25,9 +25,9 @@ use SharedBookshelf\Controller\LoginController;
 use SharedBookshelf\Controller\PrivacyController;
 use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
-use SharedBookshelf\Entities\Book;
-use SharedBookshelf\Entities\Event;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\BookEntity;
+use SharedBookshelf\Entities\EventEntity;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Playback\LoginPlayback;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
@@ -120,7 +120,7 @@ class Factory
             $this->createConfiguration(),
             $this->createCaptchaBuilder(),
             $this->createSignupFormValidator(),
-            $this->createEntityManager()->getRepository(User::class),
+            $this->createEntityManager()->getRepository(UserEntity::class),
             $this->createAuth(),
             $this->createCrypto()
         );
@@ -130,7 +130,7 @@ class Factory
     {
         return new SignupFormValidator(
             $this->createFormValidator(),
-            $this->createEntityManager()->getRepository(User::class)
+            $this->createEntityManager()->getRepository(UserEntity::class)
         );
     }
 
@@ -164,9 +164,9 @@ class Factory
             $this->createTwig(),
             $this->createConfiguration(),
             $this->createAuth(),
-            $this->createEntityManager()->getRepository(User::class),
-            $this->createEntityManager()->getRepository(Book::class),
-            $this->createEntityManager()->getRepository(Event::class)
+            $this->createEntityManager()->getRepository(UserEntity::class),
+            $this->createEntityManager()->getRepository(BookEntity::class),
+            $this->createEntityManager()->getRepository(EventEntity::class)
         );
     }
 
@@ -308,8 +308,8 @@ class Factory
     private function createAuth(): Auth
     {
         return new Auth(
-            $this->createEntityManager()->getRepository(User::class),
-            $this->createEntityManager()->getRepository(Event::class)
+            $this->createEntityManager()->getRepository(UserEntity::class),
+            $this->createEntityManager()->getRepository(EventEntity::class)
         );
     }
 
@@ -339,8 +339,8 @@ class Factory
     private function createLoginPlayback(): LoginPlayback
     {
         return new LoginPlayback(
-            $this->createEntityManager()->getRepository(Event::class),
-            $this->createEntityManager()->getRepository(User::class)
+            $this->createEntityManager()->getRepository(EventEntity::class),
+            $this->createEntityManager()->getRepository(UserEntity::class)
         );
     }
 }

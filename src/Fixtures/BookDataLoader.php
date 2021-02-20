@@ -5,7 +5,7 @@ namespace SharedBookshelf\Fixtures;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
-use SharedBookshelf\Entities\Book;
+use SharedBookshelf\Entities\BookEntity;
 
 /**
  * @codeCoverageIgnore
@@ -29,7 +29,7 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             $authorEntity = $this->getReference('AUTHOR_' . md5($author));
             $languageEntity = $this->getReference('LANGUAGE_' . md5($language));
             $countryEntity = $this->getReference('COUNTRY_' . md5($country));
-            $book = new Book(
+            $book = new BookEntity(
                 $authorEntity,
                 $countryEntity,
                 $languageEntity,

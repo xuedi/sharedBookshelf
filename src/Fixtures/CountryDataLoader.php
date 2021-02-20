@@ -4,8 +4,8 @@ namespace SharedBookshelf\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use SharedBookshelf\Entities\Author;
-use SharedBookshelf\Entities\Country;
+use SharedBookshelf\Entities\AuthorEntity;
+use SharedBookshelf\Entities\CountryEntity;
 
 /**
  * @codeCoverageIgnore
@@ -16,7 +16,7 @@ class CountryDataLoader extends AbstractFixture
     {
         $data = $this->getDataProvider();
         foreach ($data as $name) {
-            $country = new Country($name);
+            $country = new CountryEntity($name);
             $manager->persist($country);
             $this->addReference('COUNTRY_' . md5($name), $country);
         }

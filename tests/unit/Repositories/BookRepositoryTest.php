@@ -7,7 +7,7 @@ use Doctrine\ORM\Mapping\ClassMetadata;
 use Doctrine\ORM\Query;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 /**
  * @covers \SharedBookshelf\Repositories\BookRepository
@@ -41,7 +41,7 @@ final class BookRepositoryTest extends TestCase
 
     public function testCanSave(): void
     {
-        $userMock = $this->createMock(User::class);
+        $userMock = $this->createMock(UserEntity::class);
 
         $this->entityManagerMock->expects($this->once())->method('persist')->with($userMock);
         $this->entityManagerMock->expects($this->once())->method('flush');

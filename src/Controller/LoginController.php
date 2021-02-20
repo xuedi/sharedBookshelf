@@ -9,7 +9,7 @@ use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\IpAddress;
 use Twig\Environment as Twig;
 

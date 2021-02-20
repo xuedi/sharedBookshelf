@@ -14,7 +14,7 @@ use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use SharedBookshelf\Crypto;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use Twig\Environment as Twig;
 
 /**
@@ -85,7 +85,7 @@ class SignupController implements Controller
         $validatedForm = $this->formValidator->validate($request);
 
         if ($validatedForm->hasErrors() === false) {
-            $user = new User(
+            $user = new UserEntity(
                 $validatedForm->getUsername(),
                 $this->crypto->buildPasswordHash($validatedForm->getPassword()),
                 $validatedForm->getEmail()

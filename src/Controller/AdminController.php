@@ -9,7 +9,7 @@ use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Repositories\BookRepository;
 use SharedBookshelf\Repositories\EventRepository;
 use SharedBookshelf\Repositories\UserRepository;
@@ -100,7 +100,7 @@ class AdminController implements Controller
     public function events(Request $request, Response $response, array $args = []): Response
     {
         $usernameMap = [];
-        /** @var User $user */
+        /** @var UserEntity $user */
         foreach ($this->userRepository->findAll() as $user) { // TODO: move to user repo
             $usernameMap[$user->getId()->toString()] = $user->getUsername();
         }

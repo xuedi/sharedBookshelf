@@ -4,7 +4,7 @@ namespace SharedBookshelf\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use SharedBookshelf\Entities\Author;
+use SharedBookshelf\Entities\AuthorEntity;
 
 /**
  * @codeCoverageIgnore
@@ -15,7 +15,7 @@ class AuthorDataLoader extends AbstractFixture
     {
         $data = $this->getDataProvider();
         foreach ($data as $name) {
-            $author = new Author($name);
+            $author = new AuthorEntity($name);
             $manager->persist($author);
             $this->addReference('AUTHOR_'.md5($name), $author);
         }

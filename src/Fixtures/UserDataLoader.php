@@ -6,7 +6,7 @@ use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use SharedBookshelf\Crypto;
-use SharedBookshelf\Entities\User;
+use SharedBookshelf\Entities\UserEntity;
 
 /**
  * @codeCoverageIgnore
@@ -18,7 +18,7 @@ class UserDataLoader extends AbstractFixture
         $crypto = new Crypto();
         $data = $this->getDataProvider();
         foreach ($data as list($username, $password, $email)) {
-            $user = new User(
+            $user = new UserEntity(
                 $username,
                 $crypto->buildPasswordHash($password),
                 $email

@@ -4,7 +4,7 @@ namespace SharedBookshelf\Fixtures;
 
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Persistence\ObjectManager;
-use SharedBookshelf\Entities\Language;
+use SharedBookshelf\Entities\LanguageEntity;
 
 /**
  * @codeCoverageIgnore
@@ -15,7 +15,7 @@ class LanguageDataLoader extends AbstractFixture
     {
         $data = $this->getDataProvider();
         foreach ($data as $name) {
-            $language = new Language($name);
+            $language = new LanguageEntity($name);
             $manager->persist($language);
             $this->addReference('LANGUAGE_' . md5($name), $language);
         }

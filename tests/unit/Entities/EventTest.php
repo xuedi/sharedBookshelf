@@ -8,7 +8,7 @@ use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Events\DummyEvent;
 
 /**
- * @covers \SharedBookshelf\Entities\Event
+ * @covers \SharedBookshelf\Entities\EventEntity
  * @uses   \SharedBookshelf\EventType
  * @uses   \SharedBookshelf\Events\DummyEvent
  */
@@ -18,7 +18,7 @@ final class EventTest extends TestCase
     {
         $eventPayload = DummyEvent::generate();
 
-        $event = new Event($eventPayload);
+        $event = new EventEntity($eventPayload);
 
         $this->assertEquals($eventPayload->getType(), $event->getType());
         $this->assertEquals([], $event->getPayload());

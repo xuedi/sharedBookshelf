@@ -11,7 +11,7 @@ use SharedBookshelf\Events\Event as EventInterface;
 use SharedBookshelf\EventType;
 use SharedBookshelf\Repositories\EventRepository;
 
-class Event implements Entity
+class EventEntity implements Entity
 {
     private UuidInterface $id;
     private string $type;
@@ -32,6 +32,7 @@ class Event implements Entity
     public static function loadMetadata(ClassMetadata $metadata): void
     {
         $builder = new ClassMetadataBuilder($metadata);
+        $builder->setTable('Event');
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(EventRepository::class);
         $builder->addField('type', 'string');

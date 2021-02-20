@@ -3,10 +3,10 @@
 namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
-use SharedBookshelf\Entities\Author;
+use SharedBookshelf\Entities\AuthorEntity;
 
 /**
- * @covers \SharedBookshelf\Entities\Author
+ * @covers \SharedBookshelf\Entities\AuthorEntity
  */
 final class AuthorTest extends TestCase
 {
@@ -14,7 +14,7 @@ final class AuthorTest extends TestCase
 
     public function testCanRetrieveData(): void
     {
-        $user = new Author("name");
+        $user = new AuthorEntity("name");
         $this->setDoctrineId($user, 20);
 
         $this->assertEquals(20, $user->getId());

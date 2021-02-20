@@ -3,10 +3,10 @@
 namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
-use SharedBookshelf\Entities\Author;
+use SharedBookshelf\Entities\AuthorEntity;
 
 /**
- * @covers \SharedBookshelf\Entities\Country
+ * @covers \SharedBookshelf\Entities\CountryEntity
  */
 final class CountryTest extends TestCase
 {
@@ -14,7 +14,7 @@ final class CountryTest extends TestCase
 
     public function testCanRetrieveData(): void
     {
-        $user = new Country("name");
+        $user = new CountryEntity("name");
         $this->setDoctrineId($user, 20);
 
         $this->assertEquals(20, $user->getId());
