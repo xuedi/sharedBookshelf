@@ -10,13 +10,14 @@ use SharedBookshelf\Entities\User;
  * @covers \SharedBookshelf\Entities\Book
  * @uses   \SharedBookshelf\Entities\Author
  * @uses   \SharedBookshelf\Entities\Language
+ * @uses   \SharedBookshelf\Entities\Country
  */
 final class BookTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {
         $expectedAuthor = new Author("xuedi");
-        $expectedCountry = "England";
+        $expectedCountry = new Country("England");
         $expectedLanguage = new Language("English");
         $expectedPages = 1234;
         $expectedTitle = "php coding";

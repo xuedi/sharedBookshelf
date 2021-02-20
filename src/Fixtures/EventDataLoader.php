@@ -32,7 +32,7 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
 
             /** @var User $userEntity */
             $userEntity = $this->getReference('USER_' . md5($username));
-            $loginEvent = LoginEvent::fromParameters($userEntity, IpAddress::generate());
+            $loginEvent = LoginEvent::fromParameters($userEntity->getId(), IpAddress::generate());
             $newDateTime = new DateTime('now -' . (string)$days . ' days');
 
             $book = new Event($loginEvent);

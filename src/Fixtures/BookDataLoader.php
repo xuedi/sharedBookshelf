@@ -17,6 +17,7 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
         return [
             LanguageDataLoader::class,
             AuthorDataLoader::class,
+            CountryDataLoader::class,
         ];
     }
 
@@ -27,9 +28,10 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             $ean = (string)rand(1000000000000, 9999999999999);
             $authorEntity = $this->getReference('AUTHOR_' . md5($author));
             $languageEntity = $this->getReference('LANGUAGE_' . md5($language));
+            $countryEntity = $this->getReference('COUNTRY_' . md5($country));
             $book = new Book(
                 $authorEntity,
-                $country,
+                $countryEntity,
                 $languageEntity,
                 (int)$pages,
                 $title,
@@ -49,7 +51,7 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             ['Dante Alighieri', 'Italy', 'Italian', '928', 'The Divine Comedy', '1315'],
             ['Unknown', 'Sumer and Akkadian Empire', 'Akkadian', '160', 'The Epic Of Gilgamesh', '-1700'],
             ['Unknown', 'Achaemenid Empire', 'Hebrew', '176', 'The Book Of Job', '-600'],
-            ['Unknown', 'India/Iran/Iraq/Egypt/Tajikistan', 'Arabic', '288', 'One Thousand and One Nights', '1200'],
+            ['Unknown', 'Asia', 'Arabic', '288', 'One Thousand and One Nights', '1200'],
             ['Unknown', 'Iceland', 'Old Norse', '384', 'Njál\'s Saga', '1350'],
             ['Jane Austen', 'United Kingdom', 'English', '226', 'Pride and Prejudice', '1813'],
             ['Honoré de Balzac', 'France', 'French', '443', 'Le Père Goriot', '1835'],
@@ -57,8 +59,8 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             ['Giovanni Boccaccio', 'Italy', 'Italian', '1024', 'The Decameron', '1351'],
             ['Jorge Luis Borges', 'Argentina', 'Spanish', '224', 'Ficciones', '1965'],
             ['Emily Brontë', 'United Kingdom', 'English', '342', 'Wuthering Heights', '1847'],
-            ['Albert Camus', 'Algeria, French Empire', 'French', '185', 'The Stranger', '1942'],
-            ['Paul Celan', 'Romania, France', 'German', '320', 'Poems', '1952'],
+            ['Albert Camus', 'Algeria', 'French', '185', 'The Stranger', '1942'],
+            ['Paul Celan', 'France', 'German', '320', 'Poems', '1952'],
             ['Louis-Ferdinand Céline', 'France', 'French', '505', 'Journey to the End of the Night', '1932'],
             ['Miguel de Cervantes', 'Spain', 'Spanish', '1056', 'Don Quijote De La Mancha', '1610'],
             ['Geoffrey Chaucer', 'England', 'English', '544', 'The Canterbury Tales', '1450'],
@@ -112,7 +114,7 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             ['Toni Morrison', 'United States', 'English', '321', 'Beloved', '1987'],
             ['Murasaki Shikibu', 'Japan', 'Japanese', '1360', 'The Tale of Genji', '1006'],
             ['Robert Musil', 'Austria', 'German', '365', 'The Man Without Qualities', '1931'],
-            ['Vladimir Nabokov', 'Russia/United States', 'English', '317', 'Lolita', '1955'],
+            ['Vladimir Nabokov', 'United States', 'English', '317', 'Lolita', '1955'],
             ['George Orwell', 'United Kingdom', 'English', '272', 'Nineteen Eighty-Four', '1949'],
             ['Ovid', 'Roman Empire', 'Classical Latin', '576', 'Metamorphoses', '100'],
             ['Fernando Pessoa', 'Portugal', 'Portuguese', '272', 'The Book of Disquiet', '1928'],
@@ -121,8 +123,8 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             ['François Rabelais', 'France', 'French', '623', 'Gargantua and Pantagruel', '1533'],
             ['Juan Rulfo', 'Mexico', 'Spanish', '124', 'Pedro Páramo', '1955'],
             ['Rumi', 'Sultanate of Rum', 'Persian', '438', 'The Masnavi', '1236'],
-            ['Salman Rushdie', 'United Kingdom, India', 'English', '536', 'Midnight\'s Children', '1981'],
-            ['Saadi', 'Persia, Persian Empire', 'Persian', '298', 'Bostan', '1257'],
+            ['Salman Rushdie', 'United Kingdom', 'English', '536', 'Midnight\'s Children', '1981'],
+            ['Saadi', 'Persian Empire', 'Persian', '298', 'Bostan', '1257'],
             ['Tayeb Salih', 'Sudan', 'Arabic', '139', 'Season of Migration to the North', '1966'],
             ['José Saramago', 'Portugal', 'Portuguese', '352', 'Blindness', '1995'],
             ['William Shakespeare', 'England', 'English', '432', 'Hamlet', '1603'],
@@ -143,7 +145,7 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
             ['Walt Whitman', 'United States', 'English', '152', 'Leaves of Grass', '1855'],
             ['Virginia Woolf', 'United Kingdom', 'English', '216', 'Mrs Dalloway', '1925'],
             ['Virginia Woolf', 'United Kingdom', 'English', '209', 'To the Lighthouse', '1927'],
-            ['Marguerite Yourcenar', 'France/Belgium', 'French', '408', 'Memoirs of Hadrian', '1951'],
+            ['Marguerite Yourcenar', 'France', 'French', '408', 'Memoirs of Hadrian', '1951'],
         ];
     }
 }

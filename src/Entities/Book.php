@@ -12,7 +12,7 @@ class Book implements Entity
 {
     private UuidInterface $id;
     private Author $author;
-    private string $country = '';
+    private Country $country;
     private Language $language;
     private int $pages = 0;
     private string $title = '';
@@ -21,7 +21,7 @@ class Book implements Entity
 
     public function __construct(
         Author $author,
-        string $country,
+        Country $country,
         Language $language,
         int $pages,
         string $title,
@@ -47,7 +47,7 @@ class Book implements Entity
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
         $builder->addManyToOne('author', 'Author');
-        $builder->addField('country', 'string');
+        $builder->addManyToOne('country', 'Country');
         $builder->addManyToOne('language', 'Language');
         $builder->addField('pages', 'smallint');
         $builder->addField('title', 'string');
@@ -65,7 +65,7 @@ class Book implements Entity
         return $this->author;
     }
 
-    public function getCountry(): string
+    public function getCountry(): Country
     {
         return $this->country;
     }
