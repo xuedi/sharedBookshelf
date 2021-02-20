@@ -6,7 +6,6 @@ use DateTime;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Events\DummyEvent;
-use SharedBookshelf\EventType;
 
 /**
  * @covers \SharedBookshelf\Entities\Event
@@ -22,7 +21,7 @@ final class EventTest extends TestCase
         $event = new Event($eventPayload);
 
         $this->assertEquals($eventPayload->getType(), $event->getType());
-        $this->assertEquals(['dummyValue' => 'test'], $event->getPayload());
+        $this->assertEquals([], $event->getPayload());
         $this->assertInstanceOf(DateTime::class, $event->getCreated());
         $this->assertInstanceOf(UuidInterface::class, $event->getId());
     }

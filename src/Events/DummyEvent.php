@@ -9,33 +9,28 @@ use SharedBookshelf\EventType;
 
 class DummyEvent implements Event
 {
-    private string $dummy;
-
     public static function generate(): self
     {
-        return new self('test');
+        return new self();
     }
 
     public static function fromPayload(array $payload): self
     {
-        $data = (string)$payload['dummyValue'];
-        return new self($data);
+        return new self();
     }
-
-    private function __construct(string $dummy)
+    
+    private function __construct()
     {
-        $this->dummy = $dummy;
+        //
     }
 
     public function asPayload(): array
     {
-        return [
-            'dummyValue' => $this->dummy
-        ];
+        return [];
     }
 
     public function getType(): EventType
     {
-        return EventType::fromString('login');
+        return EventType::fromString('dummy');
     }
 }
