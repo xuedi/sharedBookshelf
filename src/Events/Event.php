@@ -2,6 +2,7 @@
 
 namespace SharedBookshelf\Events;
 
+use DateTime;
 use SharedBookshelf\EventType;
 
 interface Event
@@ -10,5 +11,5 @@ interface Event
 
     public function getType(): EventType;
 
-    public static function fromPayload(array $payload): self;
+    public static function fromPayload(array $payload, DateTime $created): self;
 }

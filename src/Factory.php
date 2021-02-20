@@ -4,6 +4,7 @@ namespace SharedBookshelf;
 
 use Awurth\SlimValidation\Validator as FormValidator;
 use Doctrine\Common\DataFixtures\Executor\ORMExecutor;
+use Doctrine\Common\DataFixtures\Loader as DoctrineFixtureLoader;
 use Doctrine\Common\DataFixtures\Purger\ORMPurger;
 use Doctrine\DBAL\Types\Type as DbalType;
 use Doctrine\ORM\Configuration as DoctrineConfiguration;
@@ -27,6 +28,7 @@ use SharedBookshelf\Controller\TermsController;
 use SharedBookshelf\Entities\Book;
 use SharedBookshelf\Entities\Event;
 use SharedBookshelf\Entities\User;
+use SharedBookshelf\Playback\LoginPlayback;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;
@@ -34,7 +36,6 @@ use Symfony\Component\Console\Helper\HelperSet;
 use Twig\Environment as Twig;
 use Twig\Extension\DebugExtension;
 use Twig\Loader\FilesystemLoader as TwigTemplates;
-use Doctrine\Common\DataFixtures\Loader as DoctrineFixtureLoader;
 
 /**
  * @codeCoverageIgnore
@@ -83,6 +84,13 @@ class Factory
         return new FixtureExecutor(
             $this->createOrmExecutor(),
             $this->createFixtureLoader()
+        );
+    }
+
+    public function createPlayback(): Playback
+    {
+        return new Playback(
+            $this->createLoginPlayback()
         );
     }
 
@@ -326,5 +334,13 @@ class Factory
     private function createORMPurger(): ORMPurger
     {
         return new ORMPurger();
+    }
+
+    private function createLoginPlayback(): LoginPlayback
+    {
+        return new LoginPlayback(
+            $this->createEntityManager()->getRepository(Event::class),
+            $this->createEntityManager()->getRepository(User::class)
+        );
     }
 }

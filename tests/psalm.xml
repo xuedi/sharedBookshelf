@@ -20,5 +20,35 @@
                 <file name="../src/Entities/Language.php"/>
             </errorLevel>
         </PropertyNotSetInConstructor>
+        <MixedAssignment>
+            <errorLevel type="suppress">
+                <directory name="../src/Repositories"/>
+                <directory name="../src/Playback"/>
+            </errorLevel>
+        </MixedAssignment>
+        <MixedArgument>
+            <errorLevel type="suppress">
+                <directory name="../src/Repositories"/>
+                <directory name="../src/Playback"/>
+            </errorLevel>
+        </MixedArgument>
+        <MixedMethodCall>
+            <errorLevel type="suppress">
+                <directory name="../src/Repositories"/>
+                <directory name="../src/Playback"/>
+            </errorLevel>
+        </MixedMethodCall>
+        <MixedArrayOffset>
+            <errorLevel type="suppress">
+                <directory name="../src/Repositories"/>
+                <directory name="../src/Playback"/>
+            </errorLevel>
+        </MixedArrayOffset>
+        <MixedArgumentTypeCoercion>
+            <errorLevel type="suppress">
+                <directory name="../src/Repositories"/>
+                <directory name="../src/Playback"/>
+            </errorLevel>
+        </MixedArgumentTypeCoercion>
     </issueHandlers>
 </psalm>

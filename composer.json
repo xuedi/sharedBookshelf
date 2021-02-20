@@ -23,6 +23,7 @@
   "require-dev": {
     "ext-simplexml": "*",
     "dg/bypass-finals": "^1.3",
-    "doctrine/data-fixtures": "^1.5"
+    "doctrine/data-fixtures": "^1.5",
+    "symfony/var-dumper": "^5.2"
   }
 }

@@ -2,9 +2,11 @@
 
 namespace SharedBookshelf\Repositories;
 
+use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ObjectRepository;
+use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\Entities\User;
 
 class UserRepository extends EntityRepository implements ObjectRepository
@@ -26,6 +28,14 @@ class UserRepository extends EntityRepository implements ObjectRepository
         $query->setParameter('username', $username);
 
         return $query;
+    }
+
+    public function updateLastLogin(UuidInterface $id, DateTime $created): void
+    {
+        /** @var User $user */
+        $user = $this->findOneBy(['id' => $id]);
+        $user->setLastLogin($created);
+        $this->save($user);
     }
 
     public function save(User $user): void

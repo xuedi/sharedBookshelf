@@ -31,6 +31,9 @@ update_tools: ## Upgrade Tools & Composer major versions
 run: ## basic clearing of history and screen of terminal
 	php -S localhost:8080 -t public public/index.php
 
+playback: ## rebuild the eventStore cached projections
+	@php cli/playback.php
+
 database: ## get entity information
 	php ./vendor/bin/doctrine
 

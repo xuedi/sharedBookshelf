@@ -2,6 +2,7 @@
 
 namespace SharedBookshelf\Events;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use SharedBookshelf\EventType;
 
@@ -27,7 +28,7 @@ final class DummyEventTest extends TestCase
 
     public function testBuildFromPayload(): void
     {
-        $subject = DummyEvent::fromPayload([]);
+        $subject = DummyEvent::fromPayload([], new DateTime());
 
         $this->assertEquals($this->expectedType, $subject->getType());
     }

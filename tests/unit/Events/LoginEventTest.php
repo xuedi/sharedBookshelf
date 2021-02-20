@@ -2,6 +2,7 @@
 
 namespace SharedBookshelf\Events;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
@@ -44,7 +45,7 @@ final class LoginEventTest extends TestCase
 
     public function testBuildFromPayload(): void
     {
-        $subject = LoginEvent::fromPayload($this->generatePayload());
+        $subject = LoginEvent::fromPayload($this->generatePayload(), new DateTime());
 
         $this->assertEquals($this->expectedType, $subject->getType());
     }

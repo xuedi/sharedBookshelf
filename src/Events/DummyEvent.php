@@ -2,9 +2,7 @@
 
 namespace SharedBookshelf\Events;
 
-use Ramsey\Uuid\Uuid;
-use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\User;
+use DateTime;
 use SharedBookshelf\EventType;
 
 class DummyEvent implements Event
@@ -14,11 +12,11 @@ class DummyEvent implements Event
         return new self();
     }
 
-    public static function fromPayload(array $payload): self
+    public static function fromPayload(array $payload, DateTime $created): self
     {
         return new self();
     }
-    
+
     private function __construct()
     {
         //
