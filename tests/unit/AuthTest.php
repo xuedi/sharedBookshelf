@@ -9,7 +9,7 @@ use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
 use SharedBookshelf\Entities\UserEntity;
-use SharedBookshelf\Repositories\EventRepository;
+use SharedBookshelf\Repositories\UserRepository;
 
 /**
  * @covers \SharedBookshelf\Auth
@@ -18,11 +18,11 @@ use SharedBookshelf\Repositories\EventRepository;
  */
 final class AuthTest extends TestCase
 {
-    private Auth $subject;
-    private MockObject|EntityRepository $entityManagerMock;
+    private MockObject|UserRepository $userRepositoryMock;
+    private MockObject|EventStore $eventStoreMock;
     private string $expectedUsername;
     private UuidInterface $expectedUuid;
-    private MockObject|EventStore $eventStoreMock;
+    private Auth $subject;
 
     public function setUp(): void
     {
@@ -32,9 +32,9 @@ final class AuthTest extends TestCase
         $_SESSION['auth_username'] = $this->expectedUsername;
         $_SESSION['auth_user_id'] = $this->expectedUuid->toString();
 
-        $this->entityManagerMock = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
+        $this->userRepositoryMock = $this->getMockBuilder(UserRepository::class)->disableOriginalConstructor()->getMock();
         $this->eventStoreMock = $this->getMockBuilder(EventStore::class)->disableOriginalConstructor()->getMock();
-        $this->subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
+        $this->subject = new Auth($this->userRepositoryMock, $this->eventStoreMock);
     }
 
     public function testCanRestoreFromSession(): void
@@ -93,7 +93,7 @@ final class AuthTest extends TestCase
         unset($_SESSION['auth_username']);
         $_SESSION['auth_user_id'] = '1f090736-259e-4441-b934-7e18ddb549bd';
 
-        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
+        $subject = new Auth($this->userRepositoryMock, $this->eventStoreMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -103,7 +103,7 @@ final class AuthTest extends TestCase
         $_SESSION['auth_username'] = 'test';
         unset($_SESSION['auth_user_id']);
 
-        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
+        $subject = new Auth($this->userRepositoryMock, $this->eventStoreMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -111,7 +111,7 @@ final class AuthTest extends TestCase
     public function testCanNotRestoreFromSessionSinceDueToInvalidUuid(): void
     {
         $_SESSION['auth_user_id'] = 'INVALID';
-        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
+        $subject = new Auth($this->userRepositoryMock, $this->eventStoreMock);
 
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
@@ -134,7 +134,7 @@ final class AuthTest extends TestCase
         $userMock->expects($this->once())->method('getId')->willReturn($expectedUuid);
         $userMock->expects($this->once())->method('getUsername')->willReturn($loginUser);
 
-        $this->entityManagerMock
+        $this->userRepositoryMock
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['username' => $loginUser])
@@ -150,7 +150,7 @@ final class AuthTest extends TestCase
 
     public function testDoNotVerifyWhenLoggedInAlready(): void
     {
-        $this->entityManagerMock->expects($this->never())->method('findOneBy');
+        $this->userRepositoryMock->expects($this->never())->method('findOneBy');
 
         // still confirm logged in status with true
         $this->assertTrue($this->subject->verify('test', 'test', IpAddress::generate()));
@@ -158,7 +158,7 @@ final class AuthTest extends TestCase
 
     public function testDoNotVerifyWhenUnknownUser(): void
     {
-        $this->entityManagerMock->expects($this->once())->method('findOneBy')->willReturn(null);
+        $this->userRepositoryMock->expects($this->once())->method('findOneBy')->willReturn(null);
 
         $this->subject->logout(); // make sure is logged out
         $this->assertFalse($this->subject->verify('test', 'test', IpAddress::generate()));
@@ -175,7 +175,7 @@ final class AuthTest extends TestCase
         $userMock->expects($this->never())->method('getId');
         $userMock->expects($this->never())->method('getUsername');
 
-        $this->entityManagerMock
+        $this->userRepositoryMock
             ->expects($this->once())
             ->method('findOneBy')
             ->with(['username' => $loginUser])

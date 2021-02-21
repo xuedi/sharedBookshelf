@@ -30,9 +30,9 @@ use SharedBookshelf\Entities\BookEntity;
 use SharedBookshelf\Entities\EventEntity;
 use SharedBookshelf\Entities\HandoverEntity;
 use SharedBookshelf\Entities\UserEntity;
-use SharedBookshelf\Events\Handler\HandoverConfirmedEventHandler;
-use SharedBookshelf\Events\Handler\HandoverRequestEventHandler;
-use SharedBookshelf\Events\Handler\HandoverStartedEventHandler;
+use SharedBookshelf\Events\Handler\BookHandoverEventHandler;
+use SharedBookshelf\Events\Handler\BookReceivedEventHandler;
+use SharedBookshelf\Events\Handler\BookRequestEventHandler;
 use SharedBookshelf\Events\Handler\LoginEventHandler;
 use SharedBookshelf\Playback\LoginPlayback;
 use SharedBookshelf\Repositories\BookRepository;
@@ -367,30 +367,24 @@ class Factory
         );
     }
 
-    private function createHandoverRequestEventHandler(): HandoverRequestEventHandler
+    private function createHandoverRequestEventHandler(): BookRequestEventHandler
     {
-        return new HandoverRequestEventHandler(
-            $this->createUserRepository(),
-            $this->createBookRepository(),
-            $this->createHandoverRepository(),
+        return new BookRequestEventHandler(
+            $this->createHandover(),
         );
     }
 
-    private function createHandoverStartedEventHandler(): HandoverStartedEventHandler
+    private function createHandoverStartedEventHandler(): BookHandoverEventHandler
     {
-        return new HandoverStartedEventHandler(
-            $this->createUserRepository(),
-            $this->createBookRepository(),
-            $this->createHandoverRepository(),
+        return new BookHandoverEventHandler(
+            $this->createHandover(),
         );
     }
 
-    private function createHandoverConfirmedEventHandler(): HandoverConfirmedEventHandler
+    private function createHandoverConfirmedEventHandler(): BookReceivedEventHandler
     {
-        return new HandoverConfirmedEventHandler(
-            $this->createUserRepository(),
-            $this->createBookRepository(),
-            $this->createHandoverRepository(),
+        return new BookReceivedEventHandler(
+            $this->createHandover(),
         );
     }
 
@@ -428,5 +422,14 @@ class Factory
             throw new RuntimeException('Could not create repository');
         }
         return $repo;
+    }
+
+    private function createHandover(): Handover
+    {
+        return new Handover(
+            $this->createUserRepository(),
+            $this->createBookRepository(),
+            $this->createHandoverRepository(),
+        );
     }
 }

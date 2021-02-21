@@ -9,17 +9,17 @@ class EventType
     const DUMMY = 'dummy';
     const SIGNUP = 'signup';
     const LOGIN = 'login';
-    const HANDOVER_REQUEST = 'handover_request';
-    const HANDOVER_STARTED = 'handover_started';
-    const HANDOVER_CONFIRMED = 'handover_confirmed';
+    const BOOK_REQUEST = 'book_request';
+    const BOOK_HANDOVER = 'book_handover';
+    const BOOK_RECEIVED = 'book_received';
 
     private static array $validTypes = [
         self::DUMMY,
         self::SIGNUP,
         self::LOGIN,
-        self::HANDOVER_REQUEST,
-        self::HANDOVER_STARTED,
-        self::HANDOVER_CONFIRMED,
+        self::BOOK_REQUEST,
+        self::BOOK_HANDOVER,
+        self::BOOK_RECEIVED,
     ];
 
     private string $type;

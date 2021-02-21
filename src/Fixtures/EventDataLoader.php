@@ -8,9 +8,9 @@ use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
 use ReflectionObject;
 use SharedBookshelf\Entities\EventEntity;
-use SharedBookshelf\Events\HandoverConfirmedEvent;
-use SharedBookshelf\Events\HandoverRequestEvent;
-use SharedBookshelf\Events\HandoverStartedEvent;
+use SharedBookshelf\Events\BookReceivedEvent;
+use SharedBookshelf\Events\BookRequestEvent;
+use SharedBookshelf\Events\BookHandoverEvent;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\IpAddress;
 
@@ -51,36 +51,27 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
         $userC = $this->getUser('userC')->getId();
 
         $bookA = $this->getBook('Alfred Döblin', 'Berlin Alexanderplatz')->getId();
+        $bookB = $this->getBook('Chinua Achebe', 'Things Fall Apart')->getId();
 
         return [
+            // dummy login data
             [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -354 days'],
             [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -184 days'],
             [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -66 days'],
             [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -34 days'],
-            [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -21 days'],
-            [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -10 days'],
-            [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -2 days'],
-            [LoginEvent::fromParameters($userA, IpAddress::generate()), 'now -50 days'],
-            [LoginEvent::fromParameters($userA, IpAddress::generate()), 'now -10 days'],
-            [LoginEvent::fromParameters($userA, IpAddress::generate()), 'now -4 days'],
-            [LoginEvent::fromParameters($userB, IpAddress::generate()), 'now -1242 days'],
-            [LoginEvent::fromParameters($userB, IpAddress::generate()), 'now -1177 days'],
-            [LoginEvent::fromParameters($userC, IpAddress::generate()), 'now -1 days'],
 
-            // clean handover 1
-            [HandoverRequestEvent::fromParameters($userC, $admin, $bookA), 'now -20 days'],
-            [HandoverStartedEvent::fromParameters($admin, $userC, $bookA), 'now -19 days'],
-            [HandoverConfirmedEvent::fromParameters($userC, $bookA), 'now -19 days'],
-
-            // clean handover 2
-            [HandoverRequestEvent::fromParameters($userB, $userC, $bookA), 'now -11 days'],
-            [HandoverStartedEvent::fromParameters($userC, $userB, $bookA), 'now -8 days'],
-            [HandoverConfirmedEvent::fromParameters($userB, $bookA), 'now -7 days'],
+            // clean handover
+            [LoginEvent::fromParameters($userC, IpAddress::generate()), 'now -20 days'],
+            [BookRequestEvent::fromParameters($bookA, $userC), 'now -20 days'],
+            [LoginEvent::fromParameters($admin, IpAddress::generate()), 'now -19 days'],
+            [BookHandoverEvent::fromParameters($bookA, $admin, $userC), 'now -19 days'],
+            [LoginEvent::fromParameters($userC, IpAddress::generate()), 'now -18 days'],
+            [BookReceivedEvent::fromParameters($bookA, $userC), 'now -18 days'],
 
             // popular book in multiple ques
-            [HandoverRequestEvent::fromParameters($userA, $userB, $bookA), 'now -3 days'],
-            [HandoverRequestEvent::fromParameters($admin, $userB, $bookA), 'now -3 days'],
-            [HandoverRequestEvent::fromParameters($userC, $userB, $bookA), 'now -2 days'],
+            [BookRequestEvent::fromParameters($bookB, $userA), 'now -3 days'],
+            [BookRequestEvent::fromParameters($bookB, $userB), 'now -3 days'],
+            [BookRequestEvent::fromParameters($bookB, $userC), 'now -2 days'],
         ];
     }
 

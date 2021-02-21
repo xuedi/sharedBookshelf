@@ -44,4 +44,9 @@ class DummyEvent implements Event
     {
         return $this->eventId;
     }
+
+    public function getCreated(): DateTime
+    {
+        return $this->created;
+    }
 }

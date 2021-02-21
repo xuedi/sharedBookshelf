@@ -70,6 +70,11 @@ class BookEntity implements Entity
         return $this->id;
     }
 
+    public function getLocation(): UserEntity
+    {
+        return $this->location;
+    }
+
     public function getAuthor(): AuthorEntity
     {
         return $this->author;

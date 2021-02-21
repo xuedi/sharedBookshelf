@@ -13,6 +13,9 @@ class BookRepository extends EntityRepository implements ObjectRepository
     public function findOneById(UuidInterface $id): BookEntity
     {
         $book = $this->findOneBy(['id' => $id]);
+        if ($book === null) {
+            throw new RuntimeException("Could not find the book '{$id->toString()}'");
+        }
         if (!$book instanceof BookEntity) {
             throw new RuntimeException('Got wrong type');
         }

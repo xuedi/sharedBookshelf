@@ -6,9 +6,9 @@ use RuntimeException;
 use SharedBookshelf\Entities\EventEntity;
 use SharedBookshelf\Events\DummyEvent;
 use SharedBookshelf\Events\Event;
-use SharedBookshelf\Events\HandoverConfirmedEvent;
-use SharedBookshelf\Events\HandoverRequestEvent;
-use SharedBookshelf\Events\HandoverStartedEvent;
+use SharedBookshelf\Events\BookReceivedEvent;
+use SharedBookshelf\Events\BookRequestEvent;
+use SharedBookshelf\Events\BookHandoverEvent;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\Repositories\EventRepository;
 
@@ -65,12 +65,12 @@ class EventStore
                 return DummyEvent::fromPayload(...$parameter);
             case EventType::LOGIN:
                 return LoginEvent::fromPayload(...$parameter);
-            case EventType::HANDOVER_REQUEST:
-                return HandoverRequestEvent::fromPayload(...$parameter);
-            case EventType::HANDOVER_STARTED:
-                return HandoverStartedEvent::fromPayload(...$parameter);
-            case EventType::HANDOVER_CONFIRMED:
-                return HandoverConfirmedEvent::fromPayload(...$parameter);
+            case EventType::BOOK_REQUEST:
+                return BookRequestEvent::fromPayload(...$parameter);
+            case EventType::BOOK_HANDOVER:
+                return BookHandoverEvent::fromPayload(...$parameter);
+            case EventType::BOOK_RECEIVED:
+                return BookReceivedEvent::fromPayload(...$parameter);
         }
 
         throw new RuntimeException("Could not hydrate the event: '$type'");

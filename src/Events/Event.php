@@ -12,6 +12,8 @@ interface Event
 
     public function getType(): EventType;
 
+    public function getCreated(): DateTime;
+
     public function getEventId(): UuidInterface;
 
     public static function fromPayload(array $payload, DateTime $created, UuidInterface $eventId): self;

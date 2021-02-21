@@ -13,26 +13,31 @@ class HandoverEntity implements Entity
 {
     private UuidInterface $id;
     private BookEntity $book;
+    /**
+     * @var UserEntity
+     */
     private UserEntity $requestedBy;
-    private UserEntity $requestedFrom;
     private DateTime $requestedAt;
-    private ?DateTime $bookSendAt = null;
-    private ?DateTime $bookReceivedAt = null;
-
+    /**
+     * @var UserEntity|null
+     */
+    private ?UserEntity $bookSendBy;
+    private ?DateTime $bookSendAt;
+    private ?DateTime $bookReceivedAt;
 
     public function __construct(
         BookEntity $book,
         UserEntity $requestedBy,
-        UserEntity $requestedFrom,
         DateTime $requestedAt,
+        ?UserEntity $bookSendBy = null,
         ?DateTime $bookSendAt = null,
         ?DateTime $bookReceivedAt = null
     ) {
         $this->id = Uuid::uuid4();
         $this->book = $book;
         $this->requestedBy = $requestedBy;
-        $this->requestedFrom = $requestedFrom;
         $this->requestedAt = $requestedAt;
+        $this->bookSendBy = $bookSendBy;
         $this->bookSendAt = $bookSendAt;
         $this->bookReceivedAt = $bookReceivedAt;
     }
@@ -48,8 +53,8 @@ class HandoverEntity implements Entity
         $builder->setCustomRepositoryClass(HandoverRepository::class);
         $builder->addManyToOne('book', BookEntity::class);
         $builder->addManyToOne('requestedBy', UserEntity::class);
-        $builder->addManyToOne('requestedFrom', UserEntity::class);
         $builder->addField('requestedAt', 'datetime');
+        $builder->createManyToOne('bookSendBy', UserEntity::class)->addJoinColumn('bookSendBy', 'id', true)->build();
         $builder->addField('bookSendAt', 'datetime', ['nullable' => true]);
         $builder->addField('bookReceivedAt', 'datetime', ['nullable' => true]);
     }
@@ -57,6 +62,11 @@ class HandoverEntity implements Entity
     public function setBookSendAt(DateTime $bookSendAt): void
     {
         $this->bookSendAt = $bookSendAt;
+    }
+
+    public function setBookSendBy(UserEntity $bookSendBy): void
+    {
+        $this->bookSendBy = $bookSendBy;
     }
 
     public function setBookReceivedAt(DateTime $bookReceivedAt): void
@@ -79,14 +89,14 @@ class HandoverEntity implements Entity
         return $this->requestedBy;
     }
 
-    public function getRequestedFrom(): UserEntity
-    {
-        return $this->requestedFrom;
-    }
-
     public function getRequestedAt(): DateTime
     {
         return $this->requestedAt;
+    }
+
+    public function getBookSendBy(): ?UserEntity
+    {
+        return $this->bookSendBy;
     }
 
     public function getBookSendAt(): ?DateTime
