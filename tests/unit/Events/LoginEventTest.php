@@ -17,30 +17,31 @@ use SharedBookshelf\IpAddress;
 final class LoginEventTest extends TestCase
 {
     private EventType $expectedType;
-    private UuidInterface $expectedId;
+    private UuidInterface $expectedUserId;
     private IpAddress $expectedIpAddress;
     private LoginEvent $subject;
 
     public function setUp(): void
     {
         $this->expectedType = EventType::fromString('login');
-        $this->expectedId = Uuid::uuid4();
+        $this->expectedUserId = Uuid::uuid4();
         $this->expectedIpAddress = IpAddress::generate();
 
         $this->subject = LoginEvent::fromParameters(
-            $this->expectedId,
+            $this->expectedUserId,
             $this->expectedIpAddress
         );
     }
 
-    public function testCanGetEventType(): void
+    public function testCanRetrieveData(): void
     {
         $this->assertEquals($this->expectedType, $this->subject->getType());
-    }
-
-    public function testRetrievePayload(): void
-    {
         $this->assertEquals($this->generatePayload(), $this->subject->getPayload());
+        $this->assertInstanceOf(DateTime::class, $this->subject->getCreated());
+        $this->assertInstanceOf(UuidInterface::class, $this->subject->getEventId());
+
+        $this->assertEquals($this->expectedUserId, $this->subject->getUserId());
+        $this->assertEquals($this->expectedIpAddress, $this->subject->getIp());
     }
 
     public function testBuildFromPayload(): void
@@ -57,7 +58,7 @@ final class LoginEventTest extends TestCase
     private function generatePayload(): array
     {
         return [
-            'userId' => $this->expectedId->toString(),
+            'userId' => $this->expectedUserId->toString(),
             'ip' => $this->expectedIpAddress->asString(),
         ];
     }

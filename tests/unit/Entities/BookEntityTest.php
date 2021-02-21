@@ -23,7 +23,7 @@ final class BookEntityTest extends TestCase
         $expectedTitle = "php coding";
         $expectedYear = 2020;
         $expectedEan = "1002003004009";
-        $user = new BookEntity(
+        $book = new BookEntity(
             $expectedUserMock,
             $expectedAuthor,
             $expectedCountry,
@@ -34,13 +34,18 @@ final class BookEntityTest extends TestCase
             $expectedEan
         );
 
-        $this->assertInstanceOf(UuidInterface::class, $user->getId());
-        $this->assertEquals($expectedAuthor, $user->getAuthor());
-        $this->assertEquals($expectedCountry, $user->getCountry());
-        $this->assertEquals($expectedLanguage, $user->getLanguage());
-        $this->assertEquals($expectedPages, $user->getPages());
-        $this->assertEquals($expectedTitle, $user->getTitle());
-        $this->assertEquals($expectedYear, $user->getYear());
-        $this->assertEquals($expectedEan, $user->getEan());
+        // fixed values
+        $this->assertInstanceOf(UuidInterface::class, $book->getId());
+        $this->assertEquals($expectedAuthor, $book->getAuthor());
+        $this->assertEquals($expectedCountry, $book->getCountry());
+        $this->assertEquals($expectedLanguage, $book->getLanguage());
+        $this->assertEquals($expectedPages, $book->getPages());
+        $this->assertEquals($expectedTitle, $book->getTitle());
+        $this->assertEquals($expectedYear, $book->getYear());
+        $this->assertEquals($expectedEan, $book->getEan());
+
+        // settable data
+        $book->setLocation($expectedUserMock);
+        $this->assertEquals($expectedUserMock, $book->getLocation());
     }
 }

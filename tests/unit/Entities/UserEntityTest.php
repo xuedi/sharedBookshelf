@@ -2,9 +2,9 @@
 
 namespace SharedBookshelf\Entities;
 
+use DateTime;
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\UserEntity;
 
 /**
  * @covers \SharedBookshelf\Entities\UserEntity
@@ -20,5 +20,15 @@ final class UserEntityTest extends TestCase
         $this->assertEquals("email", $user->getEmail());
         $this->assertEquals(null, $user->getLastLogin());
         $this->assertInstanceOf(UuidInterface::class, $user->getId());
+    }
+
+    public function testSetLastLogin(): void
+    {
+        $expectedDateTime = new DateTime();
+
+        $user = new UserEntity("name", "pass", "email");
+        $user->setLastLogin($expectedDateTime);
+
+        $this->assertEquals($expectedDateTime, $user->getLastLogin());
     }
 }
