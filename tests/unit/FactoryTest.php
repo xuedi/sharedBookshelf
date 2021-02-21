@@ -47,14 +47,9 @@ final class FactoryTest extends TestCase
         );
     }
 
-    public function testCanSetUp(): void
-    {
-        $this->frameworkMock->expects($this->atLeast(6))->method('registerController');
-        $this->subject->setup();
-    }
-
     public function testCanRun(): void
     {
+        $this->frameworkMock->expects($this->atLeast(6))->method('registerController');
         $this->frameworkMock->expects($this->once())->method('run');
         $this->subject->run();
     }

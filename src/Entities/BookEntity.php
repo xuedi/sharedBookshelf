@@ -11,6 +11,7 @@ use SharedBookshelf\Repositories\BookRepository;
 class BookEntity implements Entity
 {
     private UuidInterface $id;
+    private UserEntity $location;
     private AuthorEntity $author;
     private CountryEntity $country;
     private LanguageEntity $language;
@@ -20,6 +21,7 @@ class BookEntity implements Entity
     private string $ean = '';
 
     public function __construct(
+        UserEntity $location,
         AuthorEntity $author,
         CountryEntity $country,
         LanguageEntity $language,
@@ -29,6 +31,7 @@ class BookEntity implements Entity
         string $ean
     ) {
         $this->id = Uuid::uuid4();
+        $this->location = $location;
         $this->author = $author;
         $this->title = $title;
         $this->ean = $ean;
@@ -47,6 +50,7 @@ class BookEntity implements Entity
         $builder->setTable('Book');
         $builder->createField('id', 'uuid')->makePrimaryKey()->build();
         $builder->setCustomRepositoryClass(BookRepository::class);
+        $builder->addManyToOne('location', UserEntity::class);
         $builder->addManyToOne('author', AuthorEntity::class);
         $builder->addManyToOne('country', CountryEntity::class);
         $builder->addManyToOne('language', LanguageEntity::class);
@@ -54,6 +58,11 @@ class BookEntity implements Entity
         $builder->addField('title', 'string');
         $builder->addField('year', 'smallint');
         $builder->addField('ean', 'string');
+    }
+
+    public function setLocation(UserEntity $location): void
+    {
+        $this->location = $location;
     }
 
     public function getId(): UuidInterface

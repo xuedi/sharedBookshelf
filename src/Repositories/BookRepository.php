@@ -4,11 +4,22 @@ namespace SharedBookshelf\Repositories;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\Persistence\ObjectRepository;
-use SharedBookshelf\Entities\UserEntity;
+use Ramsey\Uuid\UuidInterface;
+use RuntimeException;
+use SharedBookshelf\Entities\BookEntity;
 
 class BookRepository extends EntityRepository implements ObjectRepository
 {
-    public function save(UserEntity $user): void
+    public function findOneById(UuidInterface $id): BookEntity
+    {
+        $book = $this->findOneBy(['id' => $id]);
+        if (!$book instanceof BookEntity) {
+            throw new RuntimeException('Got wrong type');
+        }
+        return $book;
+    }
+
+    public function save(BookEntity $user): void
     {
         $this->_em->persist($user);
         $this->_em->flush();

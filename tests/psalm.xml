@@ -7,6 +7,7 @@
             <directory name="../src/Fixtures"/>
             <directory name="../src/Playback"/>
             <file name="../src/EventStore.php"/>
+            <file name="../src/Framework.php"/>
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>

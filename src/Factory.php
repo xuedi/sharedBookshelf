@@ -15,6 +15,7 @@ use Doctrine\Persistence\Mapping\Driver\StaticPHPDriver;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Log\LoggerInterface;
 use Ramsey\Uuid\Doctrine\UuidType;
+use RuntimeException;
 use SharedBookshelf\Controller\AdminController;
 use SharedBookshelf\Controller\Errors\Error404Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
@@ -27,8 +28,17 @@ use SharedBookshelf\Controller\SignupController;
 use SharedBookshelf\Controller\TermsController;
 use SharedBookshelf\Entities\BookEntity;
 use SharedBookshelf\Entities\EventEntity;
+use SharedBookshelf\Entities\HandoverEntity;
 use SharedBookshelf\Entities\UserEntity;
+use SharedBookshelf\Events\Handler\HandoverConfirmedEventHandler;
+use SharedBookshelf\Events\Handler\HandoverRequestEventHandler;
+use SharedBookshelf\Events\Handler\HandoverStartedEventHandler;
+use SharedBookshelf\Events\Handler\LoginEventHandler;
 use SharedBookshelf\Playback\LoginPlayback;
+use SharedBookshelf\Repositories\BookRepository;
+use SharedBookshelf\Repositories\EventRepository;
+use SharedBookshelf\Repositories\HandoverRepository;
+use SharedBookshelf\Repositories\UserRepository;
 use SimpleLog\Logger as SimpleLogger;
 use Slim\App as Slim;
 use Slim\Factory\AppFactory;
@@ -53,9 +63,9 @@ class Factory
         $this->configFile = $configFile;
     }
 
-    public function setup(): void
+    public function run(): void
     {
-        $this->framework = $this->createFramework(); // TODO: Create controller via autoload mapping
+        $this->framework = $this->createFramework(); // TODO: Register controller via autoload mapping
         $this->framework->registerController($this->createHomeController());
         $this->framework->registerController($this->createLoginController());
         $this->framework->registerController($this->createSignupController());
@@ -64,12 +74,17 @@ class Factory
         $this->framework->registerController($this->createPrivacyController());
         $this->framework->registerController($this->createAdminController());
         $this->framework->registerErrorController($this->createError404Controller());
+        $this->framework->run();
     }
 
-    public function run(): void
+    public function process(): void
     {
-        $this->framework = $this->createFramework();
-        $this->framework->run();
+        $this->framework = $this->createFramework(); // TODO: Register Handler via autoload mapping
+        $this->framework->registerEventHandler($this->createLoginEventHandler());
+        $this->framework->registerEventHandler($this->createHandoverRequestEventHandler());
+        $this->framework->registerEventHandler($this->createHandoverStartedEventHandler());
+        $this->framework->registerEventHandler($this->createHandoverConfirmedEventHandler());
+        $this->framework->process();
     }
 
     public function getDoctrineCliHelperSet(): HelperSet
@@ -84,13 +99,6 @@ class Factory
         return new FixtureExecutor(
             $this->createOrmExecutor(),
             $this->createFixtureLoader()
-        );
-    }
-
-    public function createPlayback(): Playback
-    {
-        return new Playback(
-            $this->createLoginPlayback()
         );
     }
 
@@ -120,7 +128,7 @@ class Factory
             $this->createConfiguration(),
             $this->createCaptchaBuilder(),
             $this->createSignupFormValidator(),
-            $this->createEntityManager()->getRepository(UserEntity::class),
+            $this->createUserRepository(),
             $this->createAuth(),
             $this->createCrypto()
         );
@@ -130,7 +138,7 @@ class Factory
     {
         return new SignupFormValidator(
             $this->createFormValidator(),
-            $this->createEntityManager()->getRepository(UserEntity::class)
+            $this->createUserRepository()
         );
     }
 
@@ -164,9 +172,9 @@ class Factory
             $this->createTwig(),
             $this->createConfiguration(),
             $this->createAuth(),
-            $this->createEntityManager()->getRepository(UserEntity::class),
-            $this->createEntityManager()->getRepository(BookEntity::class),
-            $this->createEntityManager()->getRepository(EventEntity::class)
+            $this->createUserRepository(),
+            $this->createBookRepository(),
+            $this->createEventRepository()
         );
     }
 
@@ -185,6 +193,7 @@ class Factory
         }
 
         $this->framework = new Framework(
+            $this->createEventStore(),
             $this->createTwig(),
             $this->createConfiguration(),
             $this->createSlim(),
@@ -308,7 +317,7 @@ class Factory
     private function createAuth(): Auth
     {
         return new Auth(
-            $this->createEntityManager()->getRepository(EventEntity::class),
+            $this->createUserRepository(),
             $this->createEventStore()
         );
     }
@@ -340,14 +349,84 @@ class Factory
     {
         return new LoginPlayback(
             $this->createEventStore(),
-            $this->createEntityManager()->getRepository(UserEntity::class)
+            $this->createUserRepository()
         );
     }
 
     private function createEventStore(): EventStore
     {
         return new EventStore(
-            $this->createEntityManager()->getRepository(EventEntity::class)
+            $this->createEventRepository()
         );
+    }
+
+    private function createLoginEventHandler(): LoginEventHandler
+    {
+        return new LoginEventHandler(
+            $this->createUserRepository()
+        );
+    }
+
+    private function createHandoverRequestEventHandler(): HandoverRequestEventHandler
+    {
+        return new HandoverRequestEventHandler(
+            $this->createUserRepository(),
+            $this->createBookRepository(),
+            $this->createHandoverRepository(),
+        );
+    }
+
+    private function createHandoverStartedEventHandler(): HandoverStartedEventHandler
+    {
+        return new HandoverStartedEventHandler(
+            $this->createUserRepository(),
+            $this->createBookRepository(),
+            $this->createHandoverRepository(),
+        );
+    }
+
+    private function createHandoverConfirmedEventHandler(): HandoverConfirmedEventHandler
+    {
+        return new HandoverConfirmedEventHandler(
+            $this->createUserRepository(),
+            $this->createBookRepository(),
+            $this->createHandoverRepository(),
+        );
+    }
+
+    private function createUserRepository(): UserRepository
+    {
+        $repo = $this->createEntityManager()->getRepository(UserEntity::class);
+        if (!$repo instanceof UserRepository) {
+            throw new RuntimeException('Could not create repository');
+        }
+        return $repo;
+    }
+
+    private function createBookRepository(): BookRepository
+    {
+        $repo = $this->createEntityManager()->getRepository(BookEntity::class);
+        if (!$repo instanceof BookRepository) {
+            throw new RuntimeException('Could not create repository');
+        }
+        return $repo;
+    }
+
+    private function createHandoverRepository(): HandoverRepository
+    {
+        $repo = $this->createEntityManager()->getRepository(HandoverEntity::class);
+        if (!$repo instanceof HandoverRepository) {
+            throw new RuntimeException('Could not create repository');
+        }
+        return $repo;
+    }
+
+    private function createEventRepository(): EventRepository
+    {
+        $repo = $this->createEntityManager()->getRepository(EventEntity::class);
+        if (!$repo instanceof EventRepository) {
+            throw new RuntimeException('Could not create repository');
+        }
+        return $repo;
     }
 }

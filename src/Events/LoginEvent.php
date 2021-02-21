@@ -57,6 +57,11 @@ class LoginEvent implements Event
         return EventType::fromString('login');
     }
 
+    public function getEventId(): UuidInterface
+    {
+        return $this->eventId;
+    }
+
     public function getUserId(): UuidInterface
     {
         return $this->userId;

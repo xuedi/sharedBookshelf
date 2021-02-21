@@ -10,19 +10,24 @@ use RuntimeException;
 use SharedBookshelf\Controller\Controller;
 use SharedBookshelf\Controller\Errors\ErrorsController;
 use SharedBookshelf\Controller\Settings\Setting;
+use SharedBookshelf\Events\Event;
+use SharedBookshelf\Events\Handler\EventHandler;
 use Slim\App as Slim;
 use Twig\Environment as Twig;
 
 class Framework
 {
+    private EventStore $eventStore;
     private Twig $twig;
     private Slim $slim;
     private Configuration $config;
     private array $errorController = [];
+    private array $eventHandler = [];
     private ?LoggerInterface $logger;
 
-    public function __construct(Twig $twig, Configuration $config, Slim $slim, ?LoggerInterface $logger = null)
+    public function __construct(EventStore $eventStore, Twig $twig, Configuration $config, Slim $slim, ?LoggerInterface $logger = null)
     {
+        $this->eventStore = $eventStore;
         $this->twig = $twig;
         $this->config = $config;
         $this->slim = $slim;
@@ -52,12 +57,34 @@ class Framework
         $this->errorController[$controller->getExceptionClass()] = $controller;
     }
 
+    public function registerEventHandler(EventHandler $handler): void
+    {
+        $this->eventHandler[$handler->getType()->asString()] = $handler;
+    }
+
     public function run(): void
     {
         try {
             $this->slim->run();
         } catch (Exception $slimException) {
             $this->renderErrorPage($slimException);
+        }
+    }
+
+    public function process(): void
+    {
+        /** @var Event $event */
+        $events = $this->eventStore->loadAll();
+        foreach ($events as $event) {
+            $id = $event->getEventId()->toString();
+            $type = $event->getType()->asString();
+            echo "Process $id ($type)";
+            if (!isset($this->eventHandler[$type])) {
+                throw new RuntimeException("Error while processing event '$id' the type '$type' was not registered");
+            }
+            $handler = $this->eventHandler[$type];
+            $handler->handle($event);
+            echo PHP_EOL;
         }
     }
 

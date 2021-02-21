@@ -12,6 +12,8 @@ use SharedBookshelf\Entities\BookEntity;
  */
 class BookDataLoader extends AbstractFixture implements DependentFixtureInterface
 {
+    use TypedReferenceGetter;
+
     public function getDependencies()
     {
         return [
@@ -26,18 +28,17 @@ class BookDataLoader extends AbstractFixture implements DependentFixtureInterfac
         $data = $this->getDataProvider();
         foreach ($data as list($author, $country, $language, $pages, $title, $year)) {
             $ean = (string)rand(1000000000000, 9999999999999);
-            $authorEntity = $this->getReference('AUTHOR_' . md5($author));
-            $languageEntity = $this->getReference('LANGUAGE_' . md5($language));
-            $countryEntity = $this->getReference('COUNTRY_' . md5($country));
             $book = new BookEntity(
-                $authorEntity,
-                $countryEntity,
-                $languageEntity,
+                $this->getUser('admin'),
+                $this->getAuthor($author),
+                $this->getCountry($country),
+                $this->getLanguage($language),
                 (int)$pages,
                 $title,
                 (int)$year,
                 $ean
             );
+            $this->addReference('BOOK_'.md5($author.$title), $book);
             $manager->persist($book);
         }
         $manager->flush();

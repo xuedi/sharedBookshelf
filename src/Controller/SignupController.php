@@ -2,12 +2,9 @@
 
 namespace SharedBookshelf\Controller;
 
-use Doctrine\ORM\EntityRepository;
-use Doctrine\Persistence\ObjectRepository;
 use Gregwar\Captcha\CaptchaBuilder;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
-use RuntimeException;
 use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\FormValidators\SignupFormValidator;
@@ -15,6 +12,7 @@ use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
 use SharedBookshelf\Crypto;
 use SharedBookshelf\Entities\UserEntity;
+use SharedBookshelf\Repositories\UserRepository;
 use Twig\Environment as Twig;
 
 /**
@@ -29,7 +27,7 @@ class SignupController implements Controller
     private Configuration $config;
     private CaptchaBuilder $captcha;
     private SignupFormValidator $formValidator;
-    private EntityRepository $userRepository;
+    private UserRepository $userRepository;
     private Auth $auth;
     private Crypto $crypto;
 
@@ -38,11 +36,10 @@ class SignupController implements Controller
         Configuration $config,
         CaptchaBuilder $captcha,
         SignupFormValidator $formValidator,
-        EntityRepository $userRepository,
+        UserRepository $userRepository,
         Auth $auth,
         Crypto $crypto
-    )
-    {
+    ) {
         $this->twig = $twig;
         $this->config = $config;
         $this->captcha = $captcha;

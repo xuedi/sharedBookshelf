@@ -2,7 +2,6 @@
 
 namespace SharedBookshelf\Controller;
 
-use Doctrine\ORM\EntityRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use SharedBookshelf\Auth;
@@ -23,17 +22,17 @@ class AdminController implements Controller
     private Twig $twig;
     private Configuration $config;
     private Auth $auth;
-    private EntityRepository|UserRepository $userRepository;
-    private EntityRepository|BookRepository $bookRepository;
-    private EntityRepository|EventRepository $eventRepository;
+    private UserRepository $userRepository;
+    private BookRepository $bookRepository;
+    private EventRepository $eventRepository;
 
     public function __construct(
         Twig $twig,
         Configuration $config,
         Auth $auth,
-        EntityRepository $userRepository,
-        EntityRepository $bookRepository,
-        EntityRepository $eventRepository
+        UserRepository $userRepository,
+        BookRepository $bookRepository,
+        EventRepository $eventRepository
     ) {
         $this->twig = $twig;
         $this->config = $config;

@@ -39,4 +39,9 @@ class DummyEvent implements Event
     {
         return EventType::fromString('dummy');
     }
+
+    public function getEventId(): UuidInterface
+    {
+        return $this->eventId;
+    }
 }

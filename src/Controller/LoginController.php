@@ -2,14 +2,12 @@
 
 namespace SharedBookshelf\Controller;
 
-use Doctrine\ORM\EntityRepository;
 use Psr\Http\Message\ResponseInterface as Response;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use SharedBookshelf\Auth;
 use SharedBookshelf\Configuration;
 use SharedBookshelf\Controller\Settings\Collection as ControllerSettings;
 use SharedBookshelf\Controller\Settings\Setting;
-use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\IpAddress;
 use Twig\Environment as Twig;
 

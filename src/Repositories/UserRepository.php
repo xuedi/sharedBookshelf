@@ -7,6 +7,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\Persistence\ObjectRepository;
 use Ramsey\Uuid\UuidInterface;
+use RuntimeException;
 use SharedBookshelf\Entities\UserEntity;
 
 class UserRepository extends EntityRepository implements ObjectRepository
@@ -20,6 +21,15 @@ class UserRepository extends EntityRepository implements ObjectRepository
             return true;
         }
         return false;
+    }
+
+    public function findOneById(UuidInterface $id): UserEntity
+    {
+        $user = $this->findOneBy(['id' => $id]);
+        if (!$user instanceof UserEntity) {
+            throw new RuntimeException('Got wrong yype');
+        }
+        return $user;
     }
 
     public function findByUsername(string $username): Query

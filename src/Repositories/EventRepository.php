@@ -18,12 +18,18 @@ class EventRepository extends EntityRepository implements ObjectRepository
 
     public function findByType(EventType $type): EventEntityCollection
     {
-        /**
-         * @var array<EventEntity> $eventEntities
-         * @var EventEntity $eventEntity
-         */
         $collection = new EventEntityCollection();
         $eventEntities = $this->findBy(['type' => $type->asString()]);
+        foreach ($eventEntities as $eventEntity) {
+            $collection->add($eventEntity);
+        }
+        return $collection;
+    }
+
+    public function findAll(): EventEntityCollection
+    {
+        $collection = new EventEntityCollection();
+        $eventEntities = $this->findBy([], ['created' => 'ASC']);
         foreach ($eventEntities as $eventEntity) {
             $collection->add($eventEntity);
         }

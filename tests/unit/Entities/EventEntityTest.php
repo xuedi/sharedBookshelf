@@ -13,7 +13,7 @@ use SharedBookshelf\EventType;
  * @uses   \SharedBookshelf\EventType
  * @uses   \SharedBookshelf\Events\DummyEvent
  */
-final class EventTest extends TestCase
+final class EventEntityTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {

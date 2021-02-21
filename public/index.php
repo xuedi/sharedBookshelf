@@ -13,6 +13,4 @@ if (substr($_SERVER["REQUEST_URI"], 0, 8) == '/assets/' || $_SERVER["REQUEST_URI
 session_start();
 
 $factory = new Factory(new File(__DIR__ . '/../config/config.ini'));
-$factory->setup();
 $factory->run();
-

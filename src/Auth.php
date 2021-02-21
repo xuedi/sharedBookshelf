@@ -2,13 +2,11 @@
 
 namespace SharedBookshelf;
 
-use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use RuntimeException;
 use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\LoginEvent;
-use SharedBookshelf\Repositories\EventRepository;
 use SharedBookshelf\Repositories\UserRepository;
 
 class Auth
@@ -16,10 +14,10 @@ class Auth
     private static string $nobody = 'guest';
     private ?UuidInterface $userId;
     private string $username;
-    private EntityRepository|UserRepository $userRepository;
+    private UserRepository $userRepository;
     private EventStore $eventStore;
 
-    public function __construct(EntityRepository $userRepository, EventStore $eventStore)
+    public function __construct(UserRepository $userRepository, EventStore $eventStore)
     {
         $this->userId = null;
         $this->username = self::$nobody;

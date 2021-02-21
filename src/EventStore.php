@@ -2,19 +2,21 @@
 
 namespace SharedBookshelf;
 
-use Doctrine\ORM\EntityRepository;
 use RuntimeException;
 use SharedBookshelf\Entities\EventEntity;
 use SharedBookshelf\Events\DummyEvent;
 use SharedBookshelf\Events\Event;
+use SharedBookshelf\Events\HandoverConfirmedEvent;
+use SharedBookshelf\Events\HandoverRequestEvent;
+use SharedBookshelf\Events\HandoverStartedEvent;
 use SharedBookshelf\Events\LoginEvent;
 use SharedBookshelf\Repositories\EventRepository;
 
 class EventStore
 {
-    private EntityRepository|EventRepository $eventRepository;
+    private EventRepository $eventRepository;
 
-    public function __construct(EntityRepository $eventRepository)
+    public function __construct(EventRepository $eventRepository)
     {
         $this->eventRepository = $eventRepository;
     }
@@ -39,6 +41,16 @@ class EventStore
         return $return;
     }
 
+    public function loadAll(): array
+    {
+        $return = [];
+        $eventEntities = $this->eventRepository->findAll();
+        foreach ($eventEntities as $eventEntity) {
+            $return[] = $this->hydrate($eventEntity);
+        }
+        return $return;
+    }
+
     private function hydrate(EventEntity $eventEntity): Event
     {
         $type = $eventEntity->getType()->asString();
@@ -53,6 +65,12 @@ class EventStore
                 return DummyEvent::fromPayload(...$parameter);
             case EventType::LOGIN:
                 return LoginEvent::fromPayload(...$parameter);
+            case EventType::HANDOVER_REQUEST:
+                return HandoverRequestEvent::fromPayload(...$parameter);
+            case EventType::HANDOVER_STARTED:
+                return HandoverStartedEvent::fromPayload(...$parameter);
+            case EventType::HANDOVER_CONFIRMED:
+                return HandoverConfirmedEvent::fromPayload(...$parameter);
         }
 
         throw new RuntimeException("Could not hydrate the event: '$type'");

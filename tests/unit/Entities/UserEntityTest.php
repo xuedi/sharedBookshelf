@@ -9,7 +9,7 @@ use SharedBookshelf\Entities\UserEntity;
 /**
  * @covers \SharedBookshelf\Entities\UserEntity
  */
-final class UserTest extends TestCase
+final class UserEntityTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {

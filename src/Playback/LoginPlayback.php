@@ -3,7 +3,6 @@
 namespace SharedBookshelf\Playback;
 
 use DateTime;
-use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
 use SharedBookshelf\EventStore;
 use SharedBookshelf\EventType;
@@ -11,10 +10,10 @@ use SharedBookshelf\Repositories\UserRepository;
 
 class LoginPlayback
 {
-    private EntityRepository|UserRepository $userRepository;
+    private UserRepository $userRepository;
     private EventStore $eventStore;
 
-    public function __construct(EventStore $eventStore, EntityRepository $userRepository)
+    public function __construct(EventStore $eventStore, UserRepository $userRepository)
     {
         $this->eventStore = $eventStore;
         $this->userRepository = $userRepository;

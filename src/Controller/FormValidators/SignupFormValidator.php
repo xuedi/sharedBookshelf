@@ -3,9 +3,9 @@
 namespace SharedBookshelf\Controller\FormValidators;
 
 use Awurth\SlimValidation\Validator as FormValidator;
-use Doctrine\ORM\EntityRepository;
 use Psr\Http\Message\ServerRequestInterface as Request;
 use Respect\Validation\Validator as V;
+use SharedBookshelf\Repositories\UserRepository;
 
 class SignupFormValidator
 {
@@ -17,9 +17,9 @@ class SignupFormValidator
     private string $email = '';
 
     private FormValidator $formValidator;
-    private EntityRepository $userRepository;
+    private UserRepository $userRepository;
 
-    public function __construct(FormValidator $formValidator, EntityRepository $userRepository)
+    public function __construct(FormValidator $formValidator, UserRepository $userRepository)
     {
         $this->formValidator = $formValidator;
         $this->userRepository = $userRepository;

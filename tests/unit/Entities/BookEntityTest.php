@@ -4,7 +4,6 @@ namespace SharedBookshelf\Entities;
 
 use PHPUnit\Framework\TestCase;
 use Ramsey\Uuid\UuidInterface;
-use SharedBookshelf\Entities\UserEntity;
 
 /**
  * @covers \SharedBookshelf\Entities\BookEntity
@@ -12,10 +11,11 @@ use SharedBookshelf\Entities\UserEntity;
  * @uses   \SharedBookshelf\Entities\LanguageEntity
  * @uses   \SharedBookshelf\Entities\CountryEntity
  */
-final class BookTest extends TestCase
+final class BookEntityTest extends TestCase
 {
     public function testCanRetrieveData(): void
     {
+        $expectedUserMock = $this->createMock(UserEntity::class);
         $expectedAuthor = new AuthorEntity("xuedi");
         $expectedCountry = new CountryEntity("England");
         $expectedLanguage = new LanguageEntity("English");
@@ -24,6 +24,7 @@ final class BookTest extends TestCase
         $expectedYear = 2020;
         $expectedEan = "1002003004009";
         $user = new BookEntity(
+            $expectedUserMock,
             $expectedAuthor,
             $expectedCountry,
             $expectedLanguage,

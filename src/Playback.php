@@ -18,6 +18,9 @@ class Playback
 
     public function excecute(): void
     {
+
+        //TODO: $this->eventStore->process()
+
         echo '### Playback ###' . PHP_EOL;
 
         echo '--> Login';

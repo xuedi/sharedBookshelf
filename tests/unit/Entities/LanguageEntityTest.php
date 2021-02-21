@@ -6,15 +6,15 @@ use PHPUnit\Framework\TestCase;
 use SharedBookshelf\Entities\AuthorEntity;
 
 /**
- * @covers \SharedBookshelf\Entities\CountryEntity
+ * @covers \SharedBookshelf\Entities\LanguageEntity
  */
-final class CountryTest extends TestCase
+final class LanguageEntityTest extends TestCase
 {
     use ReflectiveSetterForId;
 
     public function testCanRetrieveData(): void
     {
-        $user = new CountryEntity("name");
+        $user = new LanguageEntity("name");
         $this->setDoctrineId($user, 20);
 
         $this->assertEquals(20, $user->getId());
