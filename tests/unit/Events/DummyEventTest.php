@@ -4,6 +4,7 @@ namespace SharedBookshelf\Events;
 
 use DateTime;
 use PHPUnit\Framework\TestCase;
+use Ramsey\Uuid\Uuid;
 use SharedBookshelf\EventType;
 
 /**
@@ -28,13 +29,13 @@ final class DummyEventTest extends TestCase
 
     public function testBuildFromPayload(): void
     {
-        $subject = DummyEvent::fromPayload([], new DateTime());
+        $subject = DummyEvent::fromPayload([], new DateTime(), Uuid::uuid4());
 
         $this->assertEquals($this->expectedType, $subject->getType());
     }
 
     public function testGetPayload(): void
     {
-        $this->assertEquals([], $this->subject->asPayload());
+        $this->assertEquals([], $this->subject->getPayload());
     }
 }

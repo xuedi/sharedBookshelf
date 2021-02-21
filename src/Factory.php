@@ -308,8 +308,8 @@ class Factory
     private function createAuth(): Auth
     {
         return new Auth(
-            $this->createEntityManager()->getRepository(UserEntity::class),
-            $this->createEntityManager()->getRepository(EventEntity::class)
+            $this->createEntityManager()->getRepository(EventEntity::class),
+            $this->createEventStore()
         );
     }
 
@@ -339,8 +339,15 @@ class Factory
     private function createLoginPlayback(): LoginPlayback
     {
         return new LoginPlayback(
-            $this->createEntityManager()->getRepository(EventEntity::class),
+            $this->createEventStore(),
             $this->createEntityManager()->getRepository(UserEntity::class)
+        );
+    }
+
+    private function createEventStore(): EventStore
+    {
+        return new EventStore(
+            $this->createEntityManager()->getRepository(EventEntity::class)
         );
     }
 }

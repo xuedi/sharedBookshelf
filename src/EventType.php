@@ -6,11 +6,16 @@ use RuntimeException;
 
 class EventType
 {
+    const DUMMY = 'dummy';
+    const SIGNUP = 'signup';
+    const LOGIN = 'login';
+
     private static array $validTypes = [
-        'dummy',
-        'signup',
-        'login',
+        self::DUMMY,
+        self::SIGNUP,
+        self::LOGIN,
     ];
+
     private string $type;
 
     public static function fromString(string $type): self

@@ -8,7 +8,7 @@ use SharedBookshelf\Repositories\BookRepository;
 
 class AuthorEntity implements Entity
 {
-    private int $id;
+    private int $id = 0;
     private string $name = '';
 
     public function __construct(string $name)

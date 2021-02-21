@@ -5,6 +5,8 @@
         <ignoreFiles>
             <directory name="../vendor"/>
             <directory name="../src/Fixtures"/>
+            <directory name="../src/Playback"/>
+            <file name="../src/EventStore.php"/>
         </ignoreFiles>
     </projectFiles>
     <issueHandlers>
@@ -14,41 +16,15 @@
                 <file name="../vendor/doctrine/orm/lib/Doctrine/ORM/EntityRepository.php"/>
             </errorLevel>
         </InvalidDocblock>
-        <PropertyNotSetInConstructor>
-            <errorLevel type="suppress">
-                <file name="../src/Entities/AuthorEntity.php"/>
-                <file name="../src/Entities/LanguageEntity.php"/>
-            </errorLevel>
-        </PropertyNotSetInConstructor>
         <MixedAssignment>
             <errorLevel type="suppress">
-                <directory name="../src/Repositories"/>
-                <directory name="../src/Playback"/>
+                <file name="../src/Repositories/EventRepository.php"/>
             </errorLevel>
         </MixedAssignment>
         <MixedArgument>
             <errorLevel type="suppress">
-                <directory name="../src/Repositories"/>
-                <directory name="../src/Playback"/>
+                <file name="../src/Repositories/EventRepository.php"/>
             </errorLevel>
         </MixedArgument>
-        <MixedMethodCall>
-            <errorLevel type="suppress">
-                <directory name="../src/Repositories"/>
-                <directory name="../src/Playback"/>
-            </errorLevel>
-        </MixedMethodCall>
-        <MixedArrayOffset>
-            <errorLevel type="suppress">
-                <directory name="../src/Repositories"/>
-                <directory name="../src/Playback"/>
-            </errorLevel>
-        </MixedArrayOffset>
-        <MixedArgumentTypeCoercion>
-            <errorLevel type="suppress">
-                <directory name="../src/Repositories"/>
-                <directory name="../src/Playback"/>
-            </errorLevel>
-        </MixedArgumentTypeCoercion>
     </issueHandlers>
 </psalm>

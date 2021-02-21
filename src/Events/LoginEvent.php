@@ -3,6 +3,7 @@
 namespace SharedBookshelf\Events;
 
 use DateTime;
+use JetBrains\PhpStorm\ArrayShape;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
 use SharedBookshelf\EventType;
@@ -10,16 +11,19 @@ use SharedBookshelf\IpAddress;
 
 class LoginEvent implements Event
 {
+    private UuidInterface $eventId;
     private UuidInterface $userId;
     private IpAddress $ip;
     private DateTime $created;
 
     public static function fromParameters(UuidInterface $userId, IpAddress $ip): self
     {
-        return new self($userId, $ip, new DateTime());
+        $eventId = Uuid::uuid4();
+        $created = new DateTime();
+        return new self($userId, $ip, $created, $eventId);
     }
 
-    public static function fromPayload(array $payload, DateTime $created): self
+    public static function fromPayload(array $payload, DateTime $created, UuidInterface $eventId): self
     {
         $ip = (string)$payload['ip'];
         $userId = (string)$payload['userId'];
@@ -27,18 +31,20 @@ class LoginEvent implements Event
         return new self(
             Uuid::fromString($userId),
             IpAddress::fromString($ip),
-            $created
+            $created,
+            $eventId
         );
     }
 
-    private function __construct(UuidInterface $userId, IpAddress $ip, DateTime $created)
+    private function __construct(UuidInterface $userId, IpAddress $ip, DateTime $created, UuidInterface $eventId)
     {
         $this->userId = $userId;
         $this->ip = $ip;
         $this->created = $created;
+        $this->eventId = $eventId;
     }
 
-    public function asPayload(): array
+    public function getPayload(): array
     {
         return [
             'userId' => $this->userId->toString(),

@@ -17,16 +17,16 @@ class Auth
     private ?UuidInterface $userId;
     private string $username;
     private EntityRepository|UserRepository $userRepository;
-    private EntityRepository|EventRepository $eventRepository;
+    private EventStore $eventStore;
 
-    public function __construct(EntityRepository $userRepository, EntityRepository $eventRepository)
+    public function __construct(EntityRepository $userRepository, EventStore $eventStore)
     {
         $this->userId = null;
         $this->username = self::$nobody;
 
         $this->attemptRestore();
         $this->userRepository = $userRepository;
-        $this->eventRepository = $eventRepository;
+        $this->eventStore = $eventStore;
     }
 
     public function hasId(): bool
@@ -68,7 +68,7 @@ class Auth
         if (password_verify($password, $user->getPasswordHash())) {
             $userId = $user->getId();
             $this->login($userId, $user->getUsername());
-            $this->eventRepository->write(LoginEvent::fromParameters($userId, $ip));
+            $this->eventStore->append(LoginEvent::fromParameters($userId, $ip));
             return true;
         }
 

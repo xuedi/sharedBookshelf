@@ -54,12 +54,4 @@ final class EventRepositoryTest extends TestCase
 
         $this->subject->save($eventMock);
     }
-
-    public function testCanAddEventInterface(): void
-    {
-        $this->entityManagerMock->expects($this->once())->method('persist');
-        $this->entityManagerMock->expects($this->once())->method('flush');
-
-        $this->subject->write(DummyEvent::generate());
-    }
 }

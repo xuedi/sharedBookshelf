@@ -40,12 +40,16 @@ final class LoginEventTest extends TestCase
 
     public function testRetrievePayload(): void
     {
-        $this->assertEquals($this->generatePayload(), $this->subject->asPayload());
+        $this->assertEquals($this->generatePayload(), $this->subject->getPayload());
     }
 
     public function testBuildFromPayload(): void
     {
-        $subject = LoginEvent::fromPayload($this->generatePayload(), new DateTime());
+        $subject = LoginEvent::fromPayload(
+            $this->generatePayload(),
+            new DateTime(),
+            Uuid::uuid4()
+        );
 
         $this->assertEquals($this->expectedType, $subject->getType());
     }

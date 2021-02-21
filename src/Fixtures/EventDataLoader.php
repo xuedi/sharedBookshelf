@@ -6,11 +6,10 @@ use DateTime;
 use Doctrine\Common\DataFixtures\AbstractFixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
+use Ramsey\Uuid\UuidInterface;
 use ReflectionObject;
 use SharedBookshelf\Entities\EventEntity;
-use SharedBookshelf\Entities\UserEntity;
 use SharedBookshelf\Events\LoginEvent;
-use SharedBookshelf\EventType;
 use SharedBookshelf\IpAddress;
 
 /**
@@ -27,44 +26,46 @@ class EventDataLoader extends AbstractFixture implements DependentFixtureInterfa
 
     public function load(ObjectManager $manager): void
     {
-        $data = $this->getDataProvider();
-        foreach ($data as list($username, $days)) {
-
-            /** @var UserEntity $userEntity */
-            $userEntity = $this->getReference('USER_' . md5($username));
-            $loginEvent = LoginEvent::fromParameters($userEntity->getId(), IpAddress::generate());
-            $newDateTime = new DateTime('now -' . (string)$days . ' days');
-
-            $book = new EventEntity($loginEvent);
-
-            $this->reflectionInjection($book, $newDateTime);
-
-            $manager->persist($book);
+        $data = $this->getEventList();
+        foreach ($data as list($event, $age)) {
+            $eventEntity = new EventEntity(
+                $event->getType(),
+                $event->getPayload()
+            );
+            $this->ageReflectionInjection($eventEntity, $age);
+            $manager->persist($eventEntity);
         }
         $manager->flush();
     }
 
-    private function getDataProvider(): array
+    private function getEventList(): array
     {
         return [
-            ['admin', 354],
-            ['admin', 184],
-            ['admin', 66],
-            ['admin', 34],
-            ['admin', 21],
-            ['admin', 10],
-            ['admin', 2],
-            ['userA', 50],
-            ['userA', 10],
-            ['userA', 4],
-            ['userB', 1242],
-            ['userB', 1177],
-            ['userC', 1],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -354 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -184 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -66 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -34 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -21 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -10 days'],
+            [LoginEvent::fromParameters($this->getUserId('admin'), IpAddress::generate()), 'now -2 days'],
+            [LoginEvent::fromParameters($this->getUserId('userA'), IpAddress::generate()), 'now -50 days'],
+            [LoginEvent::fromParameters($this->getUserId('userA'), IpAddress::generate()), 'now -10 days'],
+            [LoginEvent::fromParameters($this->getUserId('userA'), IpAddress::generate()), 'now -4 days'],
+            [LoginEvent::fromParameters($this->getUserId('userB'), IpAddress::generate()), 'now -1242 days'],
+            [LoginEvent::fromParameters($this->getUserId('userB'), IpAddress::generate()), 'now -1177 days'],
+            [LoginEvent::fromParameters($this->getUserId('userC'), IpAddress::generate()), 'now -1 days'],
         ];
     }
 
-    private function reflectionInjection(EventEntity $book, DateTime $newDateTime): EventEntity
+    private function getUserId(string $username): UuidInterface
     {
+        return $this->getReference('USER_' . md5($username))->getId();
+    }
+
+    private function ageReflectionInjection(EventEntity $book, string $age): EventEntity
+    {
+        $newDateTime = new DateTime($age);
+
         $refObject = new ReflectionObject($book);
         $refProperty = $refObject->getProperty('created');
         $refProperty->setAccessible(true);

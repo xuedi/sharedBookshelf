@@ -5,28 +5,25 @@ namespace SharedBookshelf\Playback;
 use DateTime;
 use Doctrine\ORM\EntityRepository;
 use Ramsey\Uuid\Uuid;
-use SharedBookshelf\Entities\UserEntity;
-use SharedBookshelf\Events\LoginEvent;
+use SharedBookshelf\EventStore;
 use SharedBookshelf\EventType;
-use SharedBookshelf\Repositories\EventRepository;
 use SharedBookshelf\Repositories\UserRepository;
 
 class LoginPlayback
 {
     private EntityRepository|UserRepository $userRepository;
-    private EntityRepository|EventRepository $eventRepository;
+    private EventStore $eventStore;
 
-    public function __construct(EntityRepository $eventRepository, EntityRepository $userRepository)
+    public function __construct(EventStore $eventStore, EntityRepository $userRepository)
     {
-        $this->eventRepository = $eventRepository;
+        $this->eventStore = $eventStore;
         $this->userRepository = $userRepository;
     }
 
     public function execute(): void
     {
         $lastLoginList = $this->getBasicUserLoginList();
-        $lastLoginList = $this->updateLastLogin($lastLoginList);
-
+        $lastLoginList = $this->extractEventLogins($lastLoginList);
         foreach ($lastLoginList as $userId => $lastLogin) {
             $this->userRepository->updateLastLogin(
                 Uuid::fromString($userId),
@@ -35,35 +32,27 @@ class LoginPlayback
         }
     }
 
-    private function updateLastLogin(array $lastLoginList): array
+    private function extractEventLogins(array $lastLoginList): array
     {
-        /** @var LoginEvent $loginEvent */
-
-        $loginEvents = $this->eventRepository->byType(EventType::fromString('login'));
+        $loginEvents = $this->eventStore->loadAllByType(EventType::fromString('login'));
         foreach ($loginEvents as $loginEvent) {
             $userId = $loginEvent->getUserId()->toString();
             $created = $loginEvent->getCreated();
-
             if ($created > $lastLoginList[$userId]) {
                 $lastLoginList[$userId] = $created;
             }
         }
-
         return $lastLoginList;
     }
 
     private function getBasicUserLoginList(): array
     {
-        /** @var UserEntity $user */
-
-        $basicDateTime = new DateTime('1900-01-01 00:00:00');
-
         $lastLoginList = [];
         $users = $this->userRepository->findAll();
+        $basicDateTime = new DateTime('1900-01-01 00:00:00');
         foreach ($users as $user) {
             $lastLoginList[$user->getId()->toString()] = $basicDateTime;
         }
-
         return $lastLoginList;
     }
 }

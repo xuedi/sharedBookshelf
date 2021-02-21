@@ -22,7 +22,7 @@ final class AuthTest extends TestCase
     private MockObject|EntityRepository $entityManagerMock;
     private string $expectedUsername;
     private UuidInterface $expectedUuid;
-    private MockObject|EventRepository $eventManagerMock;
+    private MockObject|EventStore $eventStoreMock;
 
     public function setUp(): void
     {
@@ -33,8 +33,8 @@ final class AuthTest extends TestCase
         $_SESSION['auth_user_id'] = $this->expectedUuid->toString();
 
         $this->entityManagerMock = $this->getMockBuilder(EntityRepository::class)->disableOriginalConstructor()->getMock();
-        $this->eventManagerMock = $this->getMockBuilder(EventRepository::class)->disableOriginalConstructor()->getMock();
-        $this->subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
+        $this->eventStoreMock = $this->getMockBuilder(EventStore::class)->disableOriginalConstructor()->getMock();
+        $this->subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
     }
 
     public function testCanRestoreFromSession(): void
@@ -93,7 +93,7 @@ final class AuthTest extends TestCase
         unset($_SESSION['auth_username']);
         $_SESSION['auth_user_id'] = '1f090736-259e-4441-b934-7e18ddb549bd';
 
-        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -103,7 +103,7 @@ final class AuthTest extends TestCase
         $_SESSION['auth_username'] = 'test';
         unset($_SESSION['auth_user_id']);
 
-        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
     }
@@ -111,7 +111,7 @@ final class AuthTest extends TestCase
     public function testCanNotRestoreFromSessionSinceDueToInvalidUuid(): void
     {
         $_SESSION['auth_user_id'] = 'INVALID';
-        $subject = new Auth($this->entityManagerMock, $this->eventManagerMock);
+        $subject = new Auth($this->entityManagerMock, $this->eventStoreMock);
 
         $this->assertFalse($subject->hasId());
         $this->assertEquals('guest', $subject->getUsername());
@@ -140,9 +140,9 @@ final class AuthTest extends TestCase
             ->with(['username' => $loginUser])
             ->willReturn($userMock);
 
-        $this->eventManagerMock
+        $this->eventStoreMock
             ->expects($this->once())
-            ->method('write');
+            ->method('append');
 
         $this->subject->logout(); // make sure is logged out
         $this->assertTrue($this->subject->verify($loginUser, $loginPass, IpAddress::generate()));
