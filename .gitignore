@@ -7,5 +7,3 @@ tests/.phpunit.result.cache
 
 .cache/
 logs/
-
-composer.lock
