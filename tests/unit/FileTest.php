@@ -44,11 +44,4 @@ final class FileTest extends TestCase
         $this->expectExceptionObject(new RuntimeException("The file '$expected' does not exist."));
         new File($expected);
     }
-
-    public function testCanNotOpenWithBadPermissions(): void
-    {
-        $expected = '/etc/gshadow';
-        $this->expectExceptionObject(new RuntimeException("The file '$expected' is not readable."));
-        new File($expected);
-    }
 }
