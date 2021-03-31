@@ -22,3 +22,7 @@ RUN apk add --no-cache php-pcntl \
 
 # mysql & pdo
 RUN docker-php-ext-install mysqli pdo pdo_mysql
+
+# git &ssh (composer)
+RUN apk add --no-cache git openssh
+

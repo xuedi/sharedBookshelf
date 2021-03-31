@@ -1,5 +1,6 @@
 
 [general]
+docker = true
 debug = true
 dataPath = 'data'
 environment = 'development'
