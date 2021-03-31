@@ -13,6 +13,7 @@ toolCodeSniffer=$(TestTools)'phpcs.phar'
 toolCodeFixer=$(TestTools)'phpcbf.phar'
 
 OPTIONS = --rm \
+          --network="host" \
           --name="sharedBookshelf" \
           --user="$(shell id -u):$(shell id -g)" \
           --volume "$(shell pwd):/mnt/code/"
